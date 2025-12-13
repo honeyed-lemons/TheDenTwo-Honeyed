@@ -1,0 +1,15 @@
+- type: entity
+  parent: BaseItem
+  id: SprayPaintCan
+  name: yellow spray paint
+  description: it's spray paint
+  components:
+  - type: Sprite
+    sprite: Objects/Tools/crowbar.rsi
+    state: icon
+  - type: Item
+    storedSprite:
+      sprite: Objects/Tools/crowbar.rsi
+      state: storage
+  - type: RecolorApplier
+    color: "#ffff00"
