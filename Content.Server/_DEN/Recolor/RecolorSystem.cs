@@ -19,6 +19,19 @@ public sealed partial class RecolorSystem : SharedRecolorSystem
 
         SubscribeLocalEvent<RecolorApplierComponent, AfterInteractEvent>(OnRecolorApplierAfterInteract);
         SubscribeLocalEvent<RecolorApplierComponent, ApplyRecolorDoAfterEvent>(OnApplyRecolorDoAfterEvent);
+
+        SubscribeLocalEvent<RecoloredComponent, ComponentStartup>(OnRecoloredStartup);
+        SubscribeLocalEvent<RecoloredComponent, ComponentShutdown>(OnRecoloredShutdown);
+    }
+
+    private void OnRecoloredStartup(Entity<RecoloredComponent> ent, ref ComponentStartup args)
+    {
+        _appearance.SetData(ent, RecolorVisuals.RecolorDirty, true);
+    }
+
+    private void OnRecoloredShutdown(Entity<RecoloredComponent> ent, ref ComponentShutdown args)
+    {
+        _appearance.SetData(ent, RecolorVisuals.RecolorDirty, true);
     }
 
     [PublicAPI]
@@ -41,7 +54,6 @@ public sealed partial class RecolorSystem : SharedRecolorSystem
         };
 
         AddComp(uid, recoloredComponent);
-        _appearance.SetData(uid, RecolorVisuals.RecolorDirty, true);
     }
 
     [PublicAPI]

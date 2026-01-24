@@ -26,11 +26,11 @@ public sealed partial class RecolorVisualizerSystem : VisualizerSystem<Recolored
         base.OnAppearanceChange(uid, component, ref args);
 
         if (args.Sprite == null
-            || AppearanceSystem.TryGetData(uid, RecolorVisuals.RecolorDirty, out var dirty)
+            || !AppearanceSystem.TryGetData(uid, RecolorVisuals.RecolorDirty, out var dirty)
             || dirty is not true)
             return;
 
-        ApplyRecolor((uid, component));
+        ApplyRecolor((uid, component), args.Sprite);
         AppearanceSystem.SetData(uid, RecolorVisuals.RecolorDirty, false);
     }
 
@@ -42,11 +42,8 @@ public sealed partial class RecolorVisualizerSystem : VisualizerSystem<Recolored
         RemoveRecolor(ent);
     }
 
-    private void ApplyRecolor(Entity<RecoloredComponent> ent)
+    private void ApplyRecolor(Entity<RecoloredComponent> ent, SpriteComponent sprite)
     {
-        if (!TryComp<SpriteComponent>(ent.Owner, out var sprite))
-            return;
-
         ShaderPrototype? shader = null;
         if (ent.Comp.Shader != null
             && _prototype.TryIndex<ShaderPrototype>(ent.Comp.Shader, out var proto))
