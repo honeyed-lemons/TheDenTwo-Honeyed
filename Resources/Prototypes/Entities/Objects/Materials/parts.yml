@@ -74,6 +74,17 @@
   - type: GuideHelp
     guides:
     - ExpandingRepairingStation
+  - type: ActivatableUI # DEN quick construction
+    inHandsOnly: true
+    singleUser: true
+    requireActiveHand: false
+    key: enum.QuickConstructionUiKey.Key
+  - type: UserInterface # DEN quick construction
+    interfaces:
+      enum.QuickConstructionUiKey.Key:
+        type: QuickConstructionBoundUserInterface
+  - type: QuickConstructable # DEN quick construction
+    category: MetalRod
 
 - type: entity
   parent: PartRodMetal
