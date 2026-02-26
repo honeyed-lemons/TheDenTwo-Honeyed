@@ -14,12 +14,12 @@ public sealed partial class QuickConstructionCategoryPrototype : IPrototype
     /// Name used when nested under another category
     /// </summary>
     [DataField]
-    public LocId Name = string.Empty;
+    public string Name = string.Empty;
     /// <summary>
     /// Icon used when nested under another category
     /// </summary>
     [DataField]
-    public SpriteSpecifier? Icon = SpriteSpecifier.Invalid;
+    public SpriteSpecifier? Icon;
     /// <summary>
     /// List of ConstructionPrototype(s) to list under the category, can be left empty.
     /// </summary>

@@ -1,3 +1,3 @@
 quickconstruction-category-pipe = pipes
 quickconstruction-category-tile = tiles
-quickconstruction-category-tile = railings
+quickconstruction-category-railing = railings
