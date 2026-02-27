@@ -29,11 +29,11 @@ public sealed class QuickConstructionBoundUserInterface : BoundUserInterface
     {
         base.Open();
 
-        if (!EntMan.TryGetComponent<QuickConstructableComponent>(Owner, out var quickConstructable)||
-            !_prototypeManager.TryIndex(quickConstructable.Category, out var prototype))
+        if (!EntMan.TryGetComponent<QuickConstructableComponent>(Owner, out var quickConstructable)
+            || !_prototypeManager.TryIndex(quickConstructable.Category, out var prototype))
             return;
 
-        var models = ConvertToButtons(prototype.ConstructionEntries,prototype.CategoryEntries);
+        var models = ConvertToButtons(prototype.ConstructionEntries, prototype.CategoryEntries);
 
         _menu = this.CreateWindow<SimpleRadialMenu>();
         _menu.Track(Owner);
@@ -52,9 +52,9 @@ public sealed class QuickConstructionBoundUserInterface : BoundUserInterface
 
         foreach (var constructionEntry in constructionEntries)
         {
-            if (!_prototypeManager.TryIndex(constructionEntry, out var prototype) ||
-                !constructionSystem.TryGetRecipePrototype(constructionEntry, out var recipePrototypeId) ||
-                !_prototypeManager.TryIndex(recipePrototypeId, out var recipePrototype))
+            if (!_prototypeManager.TryIndex(constructionEntry, out var prototype)
+                || !constructionSystem.TryGetRecipePrototype(constructionEntry, out var recipePrototypeId)
+                || !_prototypeManager.TryIndex(recipePrototypeId, out var recipePrototype))
                 continue;
 
             var topLevelActionOption = new RadialMenuActionOption<ConstructionPrototype>(HandlePlacement, prototype)
