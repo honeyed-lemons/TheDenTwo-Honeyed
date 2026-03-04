@@ -1,27 +1,66 @@
 - type: reagent
+  id: Cum
+  name: reagent-name-cum
+  group: Lewd
+  desc: reagent-desc-cum
+  physicalDesc: reagent-physical-desc-sticky
+  flavor: salty
+  color: "#ffffff"
+  viscosity: 0.35
+  recognizable: true
+  evaporationSpeed: 0.3
+  metabolisms:
+    Digestion:
+      effects:
+      - !type:SatiateThirst
+        factor: 0.2
+      - !type:SatiateHunger
+        factor: 1
+  footstepSound:
+    collection: FootstepSticky
+    params:
+      volume: 6
+
+- type: reagent
   id: SyntheticCum
   parent: Cum
   name: reagent-name-synth-cum
   desc: reagent-desc-synth-cum
   flavor: nothing
   metabolisms:
-    Drink:
+    Digestion:
       effects:
       - !type:SatiateThirst
         factor: 0.1
-  noRandom: true
+
+- type: reagent
+  id: NaturalLubricant
+  name: reagent-name-nat-lube
+  desc: reagent-desc-nat-lube
+  parent: SpaceLube
+  group: Lewd
+  physicalDesc: reagent-physical-desc-shiny
+  flavor: funny
+  color: "#d6d6d6"
+  evaporationSpeed: 0.3
+  metabolisms:
+    Digestion:
+      effects:
+      - !type:SatiateThirst
+        factor: 0.3
+  footstepSound:
+    collection: FootstepSticky
+    params:
+      volume: 4
 
 - type: reagent
   id: SyntheticLubricant
   parent: NaturalLubricant
   name: reagent-name-synth-lube
   desc: reagent-desc-synth-lube
-  color: "#d6d6d6"
-  physicalDesc: reagent-physical-desc-shiny
   flavor: nothing
   metabolisms:
-    Drink:
+    Digestion:
       effects:
       - !type:SatiateThirst
         factor: 0.1
-  noRandom: true

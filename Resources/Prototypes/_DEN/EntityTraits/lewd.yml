@@ -1,0 +1,56 @@
+# Reagent Production Traits
+
+- type: entityTrait
+  id: CumProducer
+  name: trait-cum-producer-name
+  description: trait-cum-producer-desc
+  category: Lewd
+  cost: 1
+  functions:
+  - !type:AddReagentProductionTrait
+    productionTypes:
+    - CumProduction
+
+- type: entityTrait
+  id: SyntheticCumProducer
+  name: trait-synth-cum-producer-name
+  description: trait-synth-cum-producer-desc
+  category: Lewd
+  cost: 1
+  functions:
+  - !type:AddReagentProductionTrait
+    productionTypes:
+    - SynthCumProduction
+
+- type: entityTrait
+  id: SquirtProducer
+  name: trait-squirt-producer-name
+  description: trait-squirt-producer-desc
+  category: Lewd
+  cost: 1
+  functions:
+  - !type:AddReagentProductionTrait
+    productionTypes:
+    - SquirtProduction
+
+- type: entityTrait
+  id: SyntheticLubeProducer
+  name: trait-synth-lube-producer-name
+  description: trait-synth-lube-producer-desc
+  category: Lewd
+  cost: 1
+  functions:
+  - !type:AddReagentProductionTrait
+    productionTypes:
+    - SynthLubeProduction
+
+- type: entityTrait
+  id: MilkProducer
+  name: trait-milk-producer-name
+  description: trait-milk-producer-desc
+  category: Lewd
+  cost: 1
+  functions:
+  - !type:AddReagentProductionTrait
+    productionTypes:
+    - BreastMilkProduction

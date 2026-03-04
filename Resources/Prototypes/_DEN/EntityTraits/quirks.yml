@@ -42,3 +42,13 @@
       - type: DamagedSiliconAccent
         enableChargeCorruption: false
         damageAtMaxCorruption: 100
+
+- type: entityTrait
+  id: HoneyProducer
+  name: trait-honey-producer-name
+  description: trait-honey-producer-desc
+  category: Quirks
+  functions:
+  - !type:AddReagentProductionTrait
+    productionTypes:
+    - HoneyProduction

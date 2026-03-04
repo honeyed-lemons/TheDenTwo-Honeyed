@@ -1,3 +1,4 @@
+# Species
 - type: traitCategory
   id: SpeciesMorphs
   name: trait-category-species-morphs
@@ -8,3 +9,10 @@
   id: SpeciesSpecific
   priority: -10
   name: trait-category-species-specific
+
+# Misc
+- type: traitCategory
+  id: Lewd
+  name: trait-category-lewd
+  priority: 20
+  maxTraitPoints: 3

@@ -31,6 +31,9 @@ public sealed partial class ReagentProductionFillEvent : DoAfterEvent
         ProductionType = productionType;
     }
 
-    public override DoAfterEvent Clone() => this;
+    public override DoAfterEvent Clone()
+    {
+        return this;
+    }
 }
 

@@ -5,7 +5,7 @@ using Robust.Shared.Prototypes;
 namespace Content.Shared._DEN.ReagentProduction.Prototypes;
 
 [Prototype]
-public sealed class ReagentProductionTypePrototype : IPrototype
+public sealed partial class ReagentProductionTypePrototype : IPrototype
 {
     [IdDataField]
     public string ID { get; private set; } = default!;
@@ -14,7 +14,7 @@ public sealed class ReagentProductionTypePrototype : IPrototype
     /// Reagent to produce
     /// </summary>
     [DataField]
-    public ProtoId<ReagentPrototype> Reagent = "Cum";
+    public ProtoId<ReagentPrototype> Reagent = "Water";
     /// <summary>
     /// The solution to produce into
     /// </summary>
@@ -32,11 +32,8 @@ public sealed class ReagentProductionTypePrototype : IPrototype
     [DataField]
     public FixedPoint2 MaximumLoad = 10;
 
-    /// <summary>
-    /// Doafter length
-    /// </summary>
     [DataField]
-    public TimeSpan FillTime = TimeSpan.FromSeconds(3);
+    public TimeSpan DoAfterLength = TimeSpan.FromSeconds(3);
 
     /// <summary>
     /// How many units are produced each update

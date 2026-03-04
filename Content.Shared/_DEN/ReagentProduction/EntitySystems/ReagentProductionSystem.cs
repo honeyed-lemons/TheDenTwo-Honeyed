@@ -1,10 +1,9 @@
-// SPDX-FileCopyrightText: 2026 Alex C
-//
-// SPDX-License-Identifier: MIT
-
 using System.Globalization;
-using Content.Shared.Chemistry.Components.SolutionManager;
+using Content.Shared._DEN.ReagentProduction.Components;
+using Content.Shared._DEN.ReagentProduction.Events;
+using Content.Shared._DEN.ReagentProduction.Prototypes;
 using Content.Shared.Chemistry.Components;
+using Content.Shared.Chemistry.Components.SolutionManager;
 using Content.Shared.Chemistry.EntitySystems;
 using Content.Shared.DoAfter;
 using Content.Shared.FixedPoint;
@@ -12,15 +11,12 @@ using Content.Shared.IdentityManagement;
 using Content.Shared.Mobs.Systems;
 using Content.Shared.Popups;
 using Content.Shared.Verbs;
-using Enumerable = System.Linq.Enumerable;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
+using Enumerable = System.Linq.Enumerable;
 using static Content.Shared._DEN.ReagentProduction.Events.ReagentProductionEvents;
-using Content.Shared._DEN.ReagentProduction.Components;
-using Content.Shared._DEN.ReagentProduction.Events;
-using Content.Shared._DEN.ReagentProduction.Prototypes;
 
-namespace Content.Shared._DEN.ReagentProduction.Systems;
+namespace Content.Shared._DEN.ReagentProduction.EntitySystems;
 
 public sealed class ReagentProductionSystem : EntitySystem
 {
@@ -31,7 +27,7 @@ public sealed class ReagentProductionSystem : EntitySystem
     [Dependency] private readonly SharedPopupSystem _popup = default!;
     [Dependency] private readonly SharedSolutionContainerSystem _solutionContainer = default!;
 
-    private static readonly VerbCategory ReagentFillCategory = new("verb-categories-fill", "/Textures/_DEN/Interface/VerbIcons/lewd.svg.192dpi.png");
+    public static readonly VerbCategory ReagentFillCategory = new("verb-categories-fill", "/Textures/_DEN/Interface/VerbIcons/lewd.svg.192dpi.png");
 
     public override void Initialize()
     {
@@ -43,8 +39,8 @@ public sealed class ReagentProductionSystem : EntitySystem
 
         SubscribeLocalEvent<ReagentProducerComponent, ReagentProductionFillEvent>(FinishFillDoAfter);
         SubscribeLocalEvent<ReagentProducerComponent, MapInitEvent>(OnMapInit);
-
     }
+
     private void OnMapInit(Entity<ReagentProducerComponent> ent, ref MapInitEvent args)
     {
         ent.Comp.NextUpdate = _gameTiming.CurTime + ent.Comp.UpdateInterval;
@@ -86,8 +82,16 @@ public sealed class ReagentProductionSystem : EntitySystem
 
     private void AddVerbs(Entity<RefillableSolutionComponent> container, ref GetVerbsEvent<InteractionVerb> args)
     {
-        if (!args.CanInteract || !args.CanAccess || !TryComp<ReagentProducerComponent>(args.User, out var producerComp))
+        if (!args.Using.HasValue || !args.CanInteract || !args.CanAccess)
             return;
+
+        var user = args.User;
+
+        if (!TryComp<ReagentProducerComponent>(user, out var producerComp))
+        {
+            return;
+        }
+
         // Add a verb for every production type the producer has
         foreach (var productionTypeId in producerComp.ProductionTypes)
         {
@@ -95,14 +99,12 @@ public sealed class ReagentProductionSystem : EntitySystem
                 !_protoManager.TryIndex(productionType.Reagent, out var reagent))
                 continue;
 
-            var producer = args.User;
             var verb = new InteractionVerb
             {
                 Category = ReagentFillCategory,
-                Act = () => StartFillDoAfter((producer, producerComp), container, productionTypeId),
+                Act = () => StartFillDoAfter((user, producerComp), container, productionTypeId),
                 Text = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(reagent.LocalizedName),
-                CloseMenu = true,
-                Priority = -1
+                Priority = -1,
             };
             args.Verbs.Add(verb);
         }
@@ -117,7 +119,7 @@ public sealed class ReagentProductionSystem : EntitySystem
         var productionType = _protoManager.Index(productionTypeId);
 
         _doAfter.TryStartDoAfter(
-            new(EntityManager, user, productionType.FillTime, new ReagentProductionFillEvent(productionTypeId), user, target: target)
+            new(EntityManager, user, productionType.DoAfterLength, new ReagentProductionFillEvent(productionTypeId), user, target: target)
         {
             BreakOnMove = true,
             BreakOnDropItem = true
@@ -182,6 +184,7 @@ public sealed class ReagentProductionSystem : EntitySystem
 
         RaiseLocalEvent(entity, new ReagentProductionTypeRemoved(prototypeType));
     }
+
     private void ProductionTypeAdded(Entity<ReagentProducerComponent> ent, ref ReagentProductionTypeAdded args)
     {
         if (!_protoManager.TryIndex(args.ProductionType, out var productionType))

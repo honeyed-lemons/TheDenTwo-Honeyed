@@ -8,7 +8,7 @@
   viscosity: 0.35
   physicalDesc: reagent-physical-desc-thick
   metabolisms:
-    Drink:
+    Digestion:
       effects:
       - !type:SatiateThirst
         factor: 6
