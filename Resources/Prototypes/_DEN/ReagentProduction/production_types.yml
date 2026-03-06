@@ -29,16 +29,17 @@
   dryPopup: squirt-verb-dry
   successPopup: squirt-verb-success
 
-- type: reagentProductionType
-  id: HoneyProduction
-  reagent: Honey
-  solutionName: honeyStomach
-  maximumCapacity: 50
-  maximumLoad: 5
-  fillTime: 1
-  unitsPerProduction: 5
-  dryPopup: honey-verb-dry
-  successPopup: honey-verb-success
+# Apparently we don't have honey yet??? fucking bunk.
+#- type: reagentProductionType
+#  id: HoneyProduction
+#  reagent: Honey
+#  solutionName: honeyStomach
+#  maximumCapacity: 50
+#  maximumLoad: 5
+#  fillTime: 1
+#  unitsPerProduction: 5
+#  dryPopup: honey-verb-dry
+#  successPopup: honey-verb-success
 
 - type: reagentProductionType
   id: SynthCumProduction
