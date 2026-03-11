@@ -1,0 +1,34 @@
+- type: entityTrait
+  id: DebugJittery
+  name: trait-debug-jittery-name
+  characterEditorSelectable: false
+  functions:
+  - !type:AddComponentTrait
+      components:
+      - type: ActiveReagentGrinder
+
+- type: entityTrait
+  id: DebugStunned
+  name: trait-debug-stunned-name
+  characterEditorSelectable: false
+  functions:
+  - !type:ApplyStatusEffectTrait
+    statusEffects:
+    - StatusEffectStunned
+
+- type: entityTrait
+  id: DebugSpawnCrowbars
+  name: trait-debug-spawn-crowbars-name
+  characterEditorSelectable: false
+  functions:
+  - !type:SpawnWithGearTrait
+      deleteGearWhenRemoved: true
+      gear:
+      - Crowbar
+      - Crowbar
+      - Crowbar
+      - Crowbar
+      - Crowbar
+      - Crowbar
+      - Crowbar
+      - Crowbar

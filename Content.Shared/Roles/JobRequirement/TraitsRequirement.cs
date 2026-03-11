@@ -15,6 +15,7 @@ namespace Content.Shared.Roles;
 /// </summary>
 [UsedImplicitly]
 [Serializable, NetSerializable]
+[Obsolete("Use EntityTraitsRequirement instead")] // DEN
 public sealed partial class TraitsRequirement : JobRequirement
 {
     [DataField(required: true)]

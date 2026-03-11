@@ -8,6 +8,7 @@ using Robust.Shared.Prototypes;
 
 namespace Content.Server.Traits;
 
+[Obsolete("Use DEN's TraitSystem instead")] // DEN
 public sealed class TraitSystem : EntitySystem
 {
     [Dependency] private readonly IPrototypeManager _prototypeManager = default!;

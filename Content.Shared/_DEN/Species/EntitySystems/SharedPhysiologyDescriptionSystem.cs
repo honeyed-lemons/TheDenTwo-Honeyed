@@ -1,6 +1,7 @@
 using Content.Shared._DEN.Species.Components;
 using Content.Shared.Examine;
 using Content.Shared.IdentityManagement;
+using JetBrains.Annotations;
 
 #pragma warning disable IDE1006 // Naming Styles
 namespace Content.Shared._DEN.Species.EntitySystems;
@@ -41,5 +42,19 @@ public abstract partial class SharedPhysiologyDescriptionSystem : EntitySystem
             ("physiology", physiologyLabel));
 
         args.PushMarkup(examineText, priority: -1);
+    }
+
+    [PublicAPI]
+    public void SetBaseText(Entity<PhysiologyDescriptionComponent> ent, LocId descriptor)
+    {
+        ent.Comp.BaseLabel = descriptor;
+        Dirty(ent);
+    }
+
+    [PublicAPI]
+    public void SetPrefixText(Entity<PhysiologyDescriptionComponent> ent, LocId? descriptor)
+    {
+        ent.Comp.PrefixLabel = descriptor;
+        Dirty(ent);
     }
 }
