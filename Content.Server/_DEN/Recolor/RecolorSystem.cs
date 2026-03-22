@@ -25,28 +25,47 @@ public sealed partial class RecolorSystem : SharedRecolorSystem
 
     private void OnComponentStartup(Entity<RecoloredComponent> ent, ref ComponentStartup args)
     {
-        DirtyVisuals(ent);
+        RefreshVisuals(ent);
     }
 
     private void OnComponentShutdown(Entity<RecoloredComponent> ent, ref ComponentShutdown args)
     {
-        DirtyVisuals(ent);
+        RemoveVisuals(ent);
     }
 
-    private void DirtyVisuals(Entity<RecoloredComponent> ent)
+    public void RefreshVisuals(Entity<RecoloredComponent> ent)
     {
         if (!TryComp(ent, out AppearanceComponent? appearance))
             return;
 
-        _appearance.SetData(ent, RecolorVisuals.Color, true, appearance);
+        _appearance.SetData(ent, RecolorVisuals.Color, ent.Comp.Color, appearance);
+
+        if (ent.Comp.Shader != null)
+            _appearance.SetData(ent, RecolorVisuals.Shader, ent.Comp.Shader, appearance);
+        if (ent.Comp.ShaderWhitelist != null)
+            _appearance.SetData(ent, RecolorVisuals.ShaderWhitelist, ent.Comp.ShaderWhitelist, appearance);
+        if (ent.Comp.ShaderBlacklist != null)
+            _appearance.SetData(ent, RecolorVisuals.ShaderBlacklist, ent.Comp.ShaderBlacklist, appearance);
+    }
+
+    public void RemoveVisuals(Entity<RecoloredComponent> ent)
+    {
+        if (!TryComp(ent, out AppearanceComponent? appearance))
+            return;
+
+        _appearance.RemoveData(ent, RecolorVisuals.Color);
+        _appearance.RemoveData(ent, RecolorVisuals.Shader);
+        _appearance.RemoveData(ent, RecolorVisuals.ShaderBlacklist);
+        _appearance.RemoveData(ent, RecolorVisuals.ShaderWhitelist);
     }
 
     [PublicAPI]
     public void Recolor(EntityUid uid,
         Color color,
-        bool affectLayersWithShaders,
         bool removable,
-        string? shader = null)
+        string? shader = null,
+        List<string>? shaderWhitelist = null,
+        List<string>? shaderBlacklist = null)
     {
         if (HasComp<RecoloredComponent>(uid))
         {
@@ -60,10 +79,11 @@ public sealed partial class RecolorSystem : SharedRecolorSystem
         {
             Color = color,
             Shader = shader,
-            AffectLayersWithShaders = affectLayersWithShaders,
+            ShaderBlacklist = shaderBlacklist,
+            ShaderWhitelist = shaderWhitelist,
             Removable = removable,
         };
-
+        
         AddComp(uid, comp);
     }
 

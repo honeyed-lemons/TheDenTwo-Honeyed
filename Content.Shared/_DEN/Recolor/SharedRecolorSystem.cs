@@ -9,8 +9,9 @@ public abstract class SharedRecolorSystem : EntitySystem;
 public sealed partial class ApplyRecolorDoAfterEvent : DoAfterEvent
 {
     public Color Color;
-    public bool AffectLayersWithShaders;
     public bool Removable;
+    public List<string>? ShaderBlacklist;
+    public List<string>? ShaderWhitelist;
     public string? Shader;
     public override DoAfterEvent Clone()
     {
@@ -22,4 +23,7 @@ public sealed partial class ApplyRecolorDoAfterEvent : DoAfterEvent
 public enum RecolorVisuals
 {
     Color,
+    Shader,
+    ShaderWhitelist,
+    ShaderBlacklist,
 }

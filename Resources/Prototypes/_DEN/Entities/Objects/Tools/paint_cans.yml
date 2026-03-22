@@ -13,6 +13,9 @@
       state: storage
   - type: RecolorApplier
     color: "#ffffff"
+    shaderBlacklist:
+    - unshaded
+    - DisplacedDraw
 
 - type: entity
   parent: SprayPaintCan

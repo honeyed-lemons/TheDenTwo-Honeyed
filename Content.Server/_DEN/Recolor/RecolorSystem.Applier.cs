@@ -23,8 +23,9 @@ public sealed partial class RecolorSystem
         {
             Color = applier.Comp.Color,
             Shader = applier.Comp.Shader,
+            ShaderBlacklist = applier.Comp.ShaderBlacklist,
+            ShaderWhitelist = applier.Comp.ShaderWhitelist,
             Removable = applier.Comp.Removable,
-            AffectLayersWithShaders = applier.Comp.AffectLayersWithShaders,
         };
 
         var doAfterArgs = new DoAfterArgs(EntityManager,
@@ -46,8 +47,10 @@ public sealed partial class RecolorSystem
         Recolor(
             uid: args.Target.Value,
             color: args.Color,
-            affectLayersWithShaders: args.AffectLayersWithShaders,
             removable: args.Removable,
-            shader: args.Shader);
+            shader: args.Shader,
+            shaderWhitelist: args.ShaderWhitelist,
+            shaderBlacklist: args.ShaderBlacklist
+            );
     }
 }

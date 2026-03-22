@@ -17,10 +17,16 @@ public sealed partial class RecolorApplierComponent : Component
     public bool Removable { get; set; }
 
     /// <summary>
-    /// Whether or not the recolor should apply to layers that already have shaders.
+    /// Don't apply shader to layers with these shaders. (Sorry about the lack of shader prototype)
     /// </summary>
     [DataField]
-    public bool AffectLayersWithShaders;
+    public List<string>? ShaderBlacklist;
+
+    /// <summary>
+    /// Only apply shader to layers with these shaders.
+    /// </summary>
+    [DataField]
+    public List<string>? ShaderWhitelist;
 
     /// <summary>
     /// The shader to apply to the recolored entity.
