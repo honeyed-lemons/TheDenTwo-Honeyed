@@ -1,5 +1,6 @@
 using Content.Shared._DEN.Recolor.Components;
 using Content.Shared.DoAfter;
+using Content.Shared.Examine;
 using Content.Shared.Interaction;
 using Content.Shared.Nutrition.EntitySystems;
 using Content.Shared.Popups;
@@ -11,8 +12,10 @@ using Robust.Shared.Serialization;
 
 namespace Content.Shared._DEN.Recolor;
 
-public abstract partial class RecolorSystem : EntitySystem
+public sealed partial class RecolorSystem : EntitySystem
 {
+    [Dependency] private readonly ILocalizationManager _localizationManager = default!;
+
     [Dependency] private readonly EntityWhitelistSystem _whitelist = default!;
     [Dependency] private readonly OpenableSystem _openable = default!;
     [Dependency] private readonly SharedAppearanceSystem _appearance = default!;
@@ -23,14 +26,19 @@ public abstract partial class RecolorSystem : EntitySystem
     public override void Initialize()
     {
         base.Initialize();
-
+        // Recolored events
         SubscribeLocalEvent<RecoloredComponent, ComponentStartup>(OnComponentStartup);
-        SubscribeLocalEvent<RecoloredComponent, ComponentShutdown>(OnComponentShutdown);
-
+        SubscribeLocalEvent<RecoloredComponent, ComponentRemove>(OnComponentRemove);
+        // Recolor Applier Events
         SubscribeLocalEvent<RecolorApplierComponent, AfterInteractEvent>(OnRecolorApplierAfterInteract);
         SubscribeLocalEvent<RecolorApplierComponent, ApplyRecolorDoAfterEvent>(OnApplyRecolorDoAfterEvent);
         SubscribeLocalEvent<RecolorApplierComponent, ComponentStartup>(OnComponentStartup);
-        SubscribeLocalEvent<RecolorApplierComponent, GetVerbsEvent<UtilityVerb>>(OnGetVerbs);
+        SubscribeLocalEvent<RecolorApplierComponent, GetVerbsEvent<UtilityVerb>>(OnGetApplierVerbs);
+        SubscribeLocalEvent<RecolorApplierComponent, ExaminedEvent>(OnExamined);
+        // Recolor Remover Events
+        SubscribeLocalEvent<RecolorRemoverComponent, AfterInteractEvent>(OnRecolorRemoverAfterInteract);
+        SubscribeLocalEvent<RecolorRemoverComponent, GetVerbsEvent<UtilityVerb>>(OnGetRemoverVerbs);
+        SubscribeLocalEvent<RecolorRemoverComponent, RemoveRecolorDoAfterEvent>(OnRemoveRecolorDoAfterEvent);
     }
 
     private void OnComponentStartup(Entity<RecoloredComponent> ent, ref ComponentStartup args)
@@ -38,7 +46,7 @@ public abstract partial class RecolorSystem : EntitySystem
         RefreshVisuals(ent);
     }
 
-    private void OnComponentShutdown(Entity<RecoloredComponent> ent, ref ComponentShutdown args)
+    private void OnComponentRemove(Entity<RecoloredComponent> ent, ref ComponentRemove args)
     {
         RemoveVisuals(ent);
     }
@@ -48,6 +56,7 @@ public abstract partial class RecolorSystem : EntitySystem
         Color color,
         bool removable,
         string? shader = null,
+        string? paintType = null,
         List<string>? shaderWhitelist = null,
         List<string>? shaderBlacklist = null)
     {
@@ -62,13 +71,15 @@ public abstract partial class RecolorSystem : EntitySystem
         var comp = new RecoloredComponent
         {
             Color = color,
+            Removable = removable,
             Shader = shader,
+            PaintType = paintType,
             ShaderBlacklist = shaderBlacklist,
             ShaderWhitelist = shaderWhitelist,
-            Removable = removable,
         };
 
         AddComp(uid, comp);
+        Dirty<RecoloredComponent>((uid, comp));
     }
 
     [PublicAPI]
@@ -112,11 +123,17 @@ public sealed partial class ApplyRecolorDoAfterEvent : DoAfterEvent
     public List<string>? ShaderBlacklist;
     public List<string>? ShaderWhitelist;
     public string? Shader;
+    public string? PaintType;
+
     public override DoAfterEvent Clone()
     {
         return this;
     }
 }
+
+[Serializable, NetSerializable]
+public sealed partial class RemoveRecolorDoAfterEvent : SimpleDoAfterEvent;
+
 
 [Serializable, NetSerializable]
 public enum RecolorVisuals

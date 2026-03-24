@@ -68,6 +68,7 @@
   - type: CleansForensics
   - type: Residue
     residueAdjective: residue-slippery
+  - type: RecolorRemover # DEN
 
 - type: entity
   parent: BaseSoap

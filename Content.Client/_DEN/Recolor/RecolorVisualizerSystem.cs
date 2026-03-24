@@ -14,7 +14,6 @@ namespace Content.Client._DEN.Recolor;
 
 public sealed class RecolorVisualizerSystem : VisualizerSystem<RecoloredComponent>
 {
-    [Dependency] private readonly IPrototypeManager _prototype = default!;
     [Dependency] private readonly ItemSystem _item = default!;
 
     public override void Initialize()
@@ -65,7 +64,11 @@ public sealed class RecolorVisualizerSystem : VisualizerSystem<RecoloredComponen
 
     private void ApplyRecolorLayers(Entity<RecoloredComponent> ent, List<(string, PrototypeLayerData)> layers)
     {
-        var appearanceData = GetRecolorAppearanceData(ent);
+        if(!TryComp<AppearanceComponent>(ent, out var appearance))
+            return;
+
+        var appearanceData = GetRecolorAppearanceData((ent.Owner,appearance));
+
         foreach (var (_, layerData) in layers)
         {
             // Apply Color
@@ -82,7 +85,10 @@ public sealed class RecolorVisualizerSystem : VisualizerSystem<RecoloredComponen
 
     private void ApplyRecolorSprite(Entity<RecoloredComponent> ent, SpriteComponent sprite)
     {
-        var appearanceData = GetRecolorAppearanceData(ent);
+        if(!TryComp<AppearanceComponent>(ent, out var appearance))
+            return;
+
+        var appearanceData = GetRecolorAppearanceData((ent.Owner,appearance));
 
         for (var i = 0; i < sprite.AllLayers.Count(); i++)
         {
@@ -105,7 +111,10 @@ public sealed class RecolorVisualizerSystem : VisualizerSystem<RecoloredComponen
 
     private void RemoveRecolor(Entity<RecoloredComponent> ent, SpriteComponent sprite)
     {
-        var appearanceData = GetRecolorAppearanceData(ent);
+        if(!TryComp<AppearanceComponent>(ent, out var appearance))
+            return;
+
+        var appearanceData = GetRecolorAppearanceData((ent.Owner,appearance));
 
         for (var i = 0; i < sprite.AllLayers.Count(); i++)
         {
@@ -123,13 +132,13 @@ public sealed class RecolorVisualizerSystem : VisualizerSystem<RecoloredComponen
             if (!AllowedShader(layerShader?.Id, appearanceData))
                 continue;
 
-            sprite.LayerSetShader(i, "");
+            sprite.LayerSetShader(i, null, null);
         }
     }
 
     private record RecolorAppearanceData(Color Color, string? Shader,List<string>? ShaderBlacklist, List<string>? ShaderWhitelist);
 
-    private RecolorAppearanceData GetRecolorAppearanceData(Entity<RecoloredComponent> ent)
+    private RecolorAppearanceData GetRecolorAppearanceData(Entity<AppearanceComponent> ent)
     {
         AppearanceSystem.TryGetData(ent, RecolorVisuals.Color, out Color color);
         AppearanceSystem.TryGetData(ent, RecolorVisuals.Shader, out string? shader);

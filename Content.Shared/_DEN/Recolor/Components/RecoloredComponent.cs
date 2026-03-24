@@ -12,20 +12,27 @@ public sealed partial class RecoloredComponent : Component
     public Color Color = Color.White;
 
     /// <summary>
+    /// Type of paint used, purely for flavor.
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public string? PaintType;
+
+    /// <summary>
     /// Whether or not this component can be removed by an entity with RecolorRemoverComponent.
     /// </summary>
+    [DataField, AutoNetworkedField]
     public bool Removable { get; set; }
 
     /// <summary>
     /// Don't apply to layers with these shaders. (Sorry about the lack of shader prototype)
     /// </summary>
-    [DataField]
+    [DataField, AutoNetworkedField]
     public List<string>? ShaderBlacklist;
 
     /// <summary>
     /// Only apply to layers with these shaders.
     /// </summary>
-    [DataField]
+    [DataField, AutoNetworkedField]
     public List<string>? ShaderWhitelist;
 
     /// <summary>
@@ -34,10 +41,4 @@ public sealed partial class RecoloredComponent : Component
     /// </summary>
     [DataField, AutoNetworkedField]
     public string? Shader { get; set; }
-
-    [DataField, AutoNetworkedField]
-    public Color? PreviousColor { get; set; }
-
-    [DataField, AutoNetworkedField]
-    public Dictionary<int, string>? PreviousShaders { get; set; }
 }

@@ -1,11 +1,13 @@
 using Content.Shared._DEN.Recolor.Components;
 using Content.Shared.DoAfter;
+using Content.Shared.Examine;
 using Content.Shared.Interaction;
 using Content.Shared.Verbs;
+using Robust.Shared.ColorNaming;
 
 namespace Content.Shared._DEN.Recolor;
 
-public abstract partial class RecolorSystem
+public sealed partial class RecolorSystem
 {
     private static void OnComponentStartup(Entity<RecolorApplierComponent> ent, ref ComponentStartup args)
     {
@@ -17,13 +19,16 @@ public abstract partial class RecolorSystem
     {
         if (!args.CanReach
             || args.Target == null
-            || CanRecolor(ent, args.User, args.Target.Value))
+            || args.Handled
+            || !CanRecolor(ent, args.User, args.Target.Value))
+        {
             return;
+        }
 
-        TryStartApplyRecolorDoAfter(args.User, args.Target.Value, ent);
+        args.Handled = TryStartApplyRecolorDoAfter(args.User, args.Target.Value, ent);
     }
 
-    private void TryStartApplyRecolorDoAfter(
+    private bool TryStartApplyRecolorDoAfter(
         EntityUid user,
         EntityUid target,
         Entity<RecolorApplierComponent> applier)
@@ -31,6 +36,7 @@ public abstract partial class RecolorSystem
         var doAfterEvent = new ApplyRecolorDoAfterEvent
         {
             Color = applier.Comp.Color,
+            PaintType = applier.Comp.PaintType,
             Shader = applier.Comp.Shader,
             ShaderBlacklist = applier.Comp.ShaderBlacklist,
             ShaderWhitelist = applier.Comp.ShaderWhitelist,
@@ -43,9 +49,14 @@ public abstract partial class RecolorSystem
             @event: doAfterEvent,
             eventTarget: applier,
             target: target,
-            used: applier);
+            used: applier)
+        {
+            BreakOnDropItem = true,
+            BreakOnMove = true,
+            BreakOnHandChange = true,
+        };
 
-        _doAfter.TryStartDoAfter(doAfterArgs);
+        return _doAfter.TryStartDoAfter(doAfterArgs);
     }
 
     private void OnApplyRecolorDoAfterEvent(Entity<RecolorApplierComponent> ent, ref ApplyRecolorDoAfterEvent args)
@@ -57,34 +68,49 @@ public abstract partial class RecolorSystem
             uid: args.Target.Value,
             color: args.Color,
             removable: args.Removable,
+            paintType: args.PaintType,
             shader: args.Shader,
             shaderWhitelist: args.ShaderWhitelist,
             shaderBlacklist: args.ShaderBlacklist
         );
 
-        PlayUseSound(ent, args.User);
+        _audio.PlayPredicted(ent.Comp.DoafterSound, ent, args.User);
 
-        ent.Comp.UsesLeft--;
+        ent.Comp.UsesLeft -= 1;
+
+        Dirty(ent);
 
         args.Handled = true;
     }
 
     private bool CanRecolor(Entity<RecolorApplierComponent> applier, EntityUid user, EntityUid target)
     {
-        if (_whitelist.IsWhitelistPass(applier.Comp.EntityWhitelist, target)
-            || !_openable.IsClosed(applier, user)
-            || applier.Comp is not { UsesLeft: <= 0, MaxUses: not null })
-            return true;
+        // Check if the applier is opened
+        if (_openable.IsClosed(applier, user, predicted: true))
+            return false;
 
-        PopupNoMoreUses(applier,user);
-        return false;
+        // Check whitelist and blacklist
+        if (!_whitelist.CheckBoth(target, applier.Comp.EntityBlacklist, applier.Comp.EntityWhitelist))
+        {
+            _popup.PopupClient(Loc.GetString(applier.Comp.CantRecolorPopup, ("target", target)),applier, user);
+            return false;
+        }
+
+        // Check if there's enough uses left
+        if (applier.Comp is { UsesLeft: <= 0, MaxUses: not null })
+        {
+            _popup.PopupClient(Loc.GetString(applier.Comp.NoMoreUsesPopup, ("name", applier)),applier, user);
+            return false;
+        }
+
+        return true;
     }
 
-    private void OnGetVerbs(Entity<RecolorApplierComponent> ent, ref GetVerbsEvent<UtilityVerb> args)
+    private void OnGetApplierVerbs(Entity<RecolorApplierComponent> ent, ref GetVerbsEvent<UtilityVerb> args)
     {
         if (!args.CanAccess
             || !args.CanInteract
-            || CanRecolor(ent, args.User, args.Target))
+            || !CanRecolor(ent, args.User, args.Target))
             return;
 
         var user = args.User;
@@ -100,13 +126,19 @@ public abstract partial class RecolorSystem
         args.Verbs.Add(verb);
     }
 
-    private void PopupNoMoreUses(Entity<RecolorApplierComponent> ent, EntityUid user)
+    private void OnExamined(Entity<RecolorApplierComponent> ent, ref ExaminedEvent args)
     {
-        _popup.PopupPredicted(Loc.GetString(ent.Comp.NoMoreUsesPopup, ("name", ent)),ent, user);
-    }
+        if (!args.IsInDetailsRange)
+            return;
+        // Get the color's name. If the color itself has a color defined, use it
+        var colorName = ent.Comp.ColorName ??
+                        // Otherwise, use what colornaming THINKS it is.
+                        ColorNaming.Describe(ent.Comp.Color, _localizationManager);
 
-    private void PlayUseSound(Entity<RecolorApplierComponent> ent, EntityUid user)
-    {
-        _audio.PlayPredicted(ent.Comp.DoafterSound, ent, user);
+        args.PushMarkup(Loc.GetString(ent.Comp.ColorShowcaseExamine, ("color", ent.Comp.Color), ("colorName", colorName)));
+
+        // If max uses isn't null (signifying this item has infinite uses), show uses count
+        if (ent.Comp.MaxUses != null)
+            args.PushMarkup(Loc.GetString(ent.Comp.UsesExamine, ("uses", ent.Comp.UsesLeft)));
     }
 }

@@ -4,7 +4,7 @@
   parent: BaseItem
   id: SprayPaintCan
   abstract: true
-  description: it's spray paint
+  description: A can of high quality spray paint with patented anti-skin technology.
   components:
   - type: Appearance
   - type: Sprite
@@ -17,9 +17,15 @@
     closeSound:
       path: /Audio/Effects/pop_high.ogg
   - type: RecolorApplier
+    removable: true
+    paintType: spray paint
     shaderBlacklist:
     - unshaded
     - DisplacedDraw
+    entityBlacklist:
+      components:
+      - HumanoidProfile
+      - Puddle
     maxUses: 64
 
 # Rainbow colors
@@ -31,6 +37,7 @@
   components:
   - type: RecolorApplier
     color: red
+    colorName: red
   - type: Sprite
     layers:
     - state: spray-can-base
@@ -52,6 +59,7 @@
   components:
   - type: RecolorApplier
     color: orange
+    colorName: orange
   - type: Sprite
     layers:
     - state: spray-can-base
@@ -73,6 +81,7 @@
   components:
   - type: RecolorApplier
     color: yellow
+    colorName: yellow
   - type: Sprite
     layers:
     - state: spray-can-base
@@ -94,6 +103,7 @@
   components:
   - type: RecolorApplier
     color: greenyellow
+    colorName: lime green
   - type: Sprite
     layers:
     - state: spray-can-base
@@ -115,6 +125,7 @@
   components:
   - type: RecolorApplier
     color: green
+    colorName: green
   - type: Sprite
     layers:
     - state: spray-can-base
@@ -136,6 +147,7 @@
   components:
   - type: RecolorApplier
     color: cyan
+    colorName: cyan
   - type: Sprite
     layers:
     - state: spray-can-base
@@ -157,6 +169,7 @@
   components:
   - type: RecolorApplier
     color: blue
+    colorName: blue
   - type: Sprite
     layers:
     - state: spray-can-base
@@ -178,6 +191,7 @@
   components:
   - type: RecolorApplier
     color: purple
+    colorName: purple
   - type: Sprite
     layers:
     - state: spray-can-base
@@ -199,6 +213,7 @@
   components:
   - type: RecolorApplier
     color: hotpink
+    colorName: pink
   - type: Sprite
     layers:
     - state: spray-can-base
@@ -222,6 +237,7 @@
   components:
   - type: RecolorApplier
     color: gold
+    colorName: gold
   - type: Sprite
     layers:
     - state: spray-can-base
@@ -243,6 +259,7 @@
   components:
   - type: RecolorApplier
     color: silver
+    colorName: silver
   - type: Sprite
     layers:
     - state: spray-can-base
@@ -264,6 +281,7 @@
   components:
   - type: RecolorApplier
     color: chocolate
+    colorName: copper
   - type: Sprite
     layers:
     - state: spray-can-base
@@ -329,6 +347,7 @@
   components:
   - type: RecolorApplier
     color: &black "#333333"
+    colorName: black
   - type: Sprite
     layers:
     - state: spray-can-base
@@ -350,6 +369,7 @@
   components:
   - type: RecolorApplier
     color: saddlebrown
+    colorName: brown
   - type: Sprite
     layers:
     - state: spray-can-base
