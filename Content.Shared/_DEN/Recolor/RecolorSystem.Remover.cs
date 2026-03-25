@@ -16,9 +16,6 @@ public sealed partial class RecolorSystem
         if (!TryComp<RecoloredComponent>(args.Target, out var recolored) || !recolored.Removable)
             return;
 
-        if (recolored.PaintType != null)
-            _popup.PopupClient(Loc.GetString("recolor-remover-start-popup", ("name", args.Target), ("paintType", recolored.PaintType)),ent,args.User);
-
         args.Handled = TryStartRemoveRecolorDoAfter(args.User, (args.Target.Value, recolored), ent);
     }
 
@@ -41,6 +38,9 @@ public sealed partial class RecolorSystem
             BreakOnMove = true,
             BreakOnHandChange = true,
         };
+
+        if (target.Comp.PaintType != null)
+            _popup.PopupClient(Loc.GetString("recolor-remover-start-popup", ("name", target), ("paintType", target.Comp.PaintType)),remover,user);
 
         return _doAfter.TryStartDoAfter(doAfterArgs);
     }

@@ -22,6 +22,7 @@ public sealed partial class RecolorSystem : EntitySystem
     [Dependency] private readonly SharedAudioSystem _audio = default!;
     [Dependency] private readonly SharedDoAfterSystem _doAfter = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
+    [Dependency] private readonly SharedUserInterfaceSystem _ui = default!;
 
     public override void Initialize()
     {
@@ -37,6 +38,10 @@ public sealed partial class RecolorSystem : EntitySystem
         SubscribeLocalEvent<RecolorApplierComponent, ComponentStartup>(OnComponentStartup);
         SubscribeLocalEvent<RecolorApplierComponent, GetVerbsEvent<UtilityVerb>>(OnGetApplierVerbs);
         SubscribeLocalEvent<RecolorApplierComponent, ExaminedEvent>(OnExamined);
+        // Recolor Applier Color Selector Events
+        SubscribeLocalEvent<RecolorApplierColorSelectorComponent, BoundUIOpenedEvent>(OnBoundUIOpened);
+        SubscribeLocalEvent<RecolorApplierColorSelectorComponent, RecolorApplierColorMessage>(OnRecolorApplierColorChanged);
+
         // Recolor Remover Events
         SubscribeLocalEvent<RecolorRemoverComponent, AfterInteractEvent>(OnRecolorRemoverAfterInteract);
         SubscribeLocalEvent<RecolorRemoverComponent, GetVerbsEvent<UtilityVerb>>(OnGetRemoverVerbs);

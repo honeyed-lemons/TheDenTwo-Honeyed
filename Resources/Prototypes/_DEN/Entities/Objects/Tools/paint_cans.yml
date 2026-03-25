@@ -390,3 +390,68 @@
         enum.OpenableVisuals.Layer:
           True: {state: "spray-can-color-open" , color: saddlebrown}
           False: {state: "spray-can-color-closed" , color: saddlebrown}
+
+# Magic spray paints
+
+- type: entity
+  parent: SprayPaintCan
+  id: SprayPaintCanMagic
+  name: magic spray paint
+  components:
+  - type: RecolorApplier
+    color: white
+  - type: RecolorApplierColorSelector
+  - type: ActivatableUI
+    blockSpectators: true
+    inHandsOnly: true
+    singleUser: true
+    verbText: verb-recolor-applier-color-selector-openui #fuck you i can make it as long as i want
+    key: enum.RecolorApplierColorSelectorKey.Key
+  - type: UserInterface
+    interfaces:
+      enum.RecolorApplierColorSelectorKey.Key:
+        type: RecolorApplierColorSelectorBui
+  - type: Sprite
+    layers:
+    - state: spray-can-rainbow
+      map: ["Base"]
+    - state: spray-can-rainbow-cap
+      map: ["enum.OpenableVisuals.Layer"]
+  - type: GenericVisualizer
+    visuals:
+      enum.OpenableVisuals.Opened:
+        enum.OpenableVisuals.Layer:
+          True: {visible: false}
+          False: {visible: true}
+
+- type: entity
+  parent: SprayPaintCanMagic
+  id: SprayPaintCanMagicMapping
+  suffix: do not map
+  name: infinite magic spray paint
+  components:
+  - type: RecolorApplier
+    maxUses:
+
+- type: entity
+  parent: SprayPaintCan
+  id: SprayPaintCanInvisible
+  suffix: do not map
+  name: invisible spray paint
+  components:
+  - type: RecolorApplier
+    color: "#FFFFFF00"
+    colorName: invisible
+  - type: Sprite
+    layers:
+    - state: spray-can-base
+      map: ["Base"]
+    - state: spray-can-color-closed
+      map: ["enum.OpenableVisuals.Layer"]
+      color: white
+  - type: GenericVisualizer
+    visuals:
+      enum.OpenableVisuals.Opened:
+        enum.OpenableVisuals.Layer:
+          True: {state: "spray-can-color-open" , color: white}
+          False: {state: "spray-can-color-closed" , color: white}

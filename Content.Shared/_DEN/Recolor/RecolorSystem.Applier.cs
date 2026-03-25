@@ -3,12 +3,25 @@ using Content.Shared.DoAfter;
 using Content.Shared.Examine;
 using Content.Shared.Interaction;
 using Content.Shared.Verbs;
+using JetBrains.Annotations;
 using Robust.Shared.ColorNaming;
 
 namespace Content.Shared._DEN.Recolor;
 
 public sealed partial class RecolorSystem
 {
+    [PublicAPI]
+    public void ChangeColor(Entity<RecolorApplierComponent> ent, Color color, string? colorName = null)
+    {
+        if (color == ent.Comp.Color)
+            return;
+
+        ent.Comp.Color = color;
+        ent.Comp.ColorName = colorName ?? null;
+
+        Dirty(ent);
+    }
+
     private static void OnComponentStartup(Entity<RecolorApplierComponent> ent, ref ComponentStartup args)
     {
         if (ent.Comp.MaxUses != null)

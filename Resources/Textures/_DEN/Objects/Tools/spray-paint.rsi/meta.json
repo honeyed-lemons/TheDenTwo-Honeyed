@@ -15,6 +15,12 @@
         },
         {
             "name": "spray-can-color-open"
+        },
+        {
+            "name": "spray-can-rainbow"
+        },
+        {
+            "name": "spray-can-rainbow-cap"
         }
     ]
 }
