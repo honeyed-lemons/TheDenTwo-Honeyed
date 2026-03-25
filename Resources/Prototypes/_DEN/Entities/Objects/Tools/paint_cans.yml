@@ -16,17 +16,24 @@
       path: /Audio/Effects/pop_high.ogg
     closeSound:
       path: /Audio/Effects/pop_high.ogg
-  - type: RecolorApplier
+  - type: PhysicalComposition
+    materialComposition:
+      Steel: 100
+  - type: RecolorApplier # The important one
     removable: true
     paintType: spray paint
     shaderBlacklist:
-    - unshaded
-    - DisplacedDraw
+    - unshaded # I don't want things becoming unshaded!!!
+    - DisplacedDraw # I don't want things becoming undisplaced!!!
     entityBlacklist:
       components:
-      - HumanoidProfile
-      - Puddle
-    maxUses: 64
+      - HumanoidProfile # Prevent spraying on humans
+      - Puddle # It's a liquid lol
+      - Cable # For accessibility reasons.
+      - CableVisualizer # See above
+      - AtmosPipeColor # It doesn't work currently, unsure why? Possibly because gaspipecolor visualizer runs first.
+      - PipeColorVisuals # See above
+    maxUses: 64 # Might be too much? Unsure.
 
 # Rainbow colors
 

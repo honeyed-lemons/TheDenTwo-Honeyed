@@ -29,6 +29,8 @@ public sealed partial class RecolorSystem : EntitySystem
         // Recolored events
         SubscribeLocalEvent<RecoloredComponent, ComponentStartup>(OnComponentStartup);
         SubscribeLocalEvent<RecoloredComponent, ComponentRemove>(OnComponentRemove);
+        SubscribeLocalEvent<RecoloredComponent, ExaminedEvent>(OnExamined);
+
         // Recolor Applier Events
         SubscribeLocalEvent<RecolorApplierComponent, AfterInteractEvent>(OnRecolorApplierAfterInteract);
         SubscribeLocalEvent<RecolorApplierComponent, ApplyRecolorDoAfterEvent>(OnApplyRecolorDoAfterEvent);
@@ -49,6 +51,15 @@ public sealed partial class RecolorSystem : EntitySystem
     private void OnComponentRemove(Entity<RecoloredComponent> ent, ref ComponentRemove args)
     {
         RemoveVisuals(ent);
+    }
+
+    private void OnExamined(Entity<RecoloredComponent> ent, ref ExaminedEvent args)
+    {
+        if (!args.IsInDetailsRange)
+            return;
+
+        if (ent.Comp.PaintType != null)
+            args.PushMarkup(Loc.GetString("recolored-examine", ("color", ent.Comp.Color), ("paintType", ent.Comp.PaintType)));
     }
 
     [PublicAPI]

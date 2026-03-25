@@ -4,6 +4,7 @@ using Content.Client.Items.Systems;
 using Content.Shared._DEN.Recolor;
 using Content.Shared._DEN.Recolor.Components;
 using Content.Shared.Clothing;
+using Content.Shared.Examine;
 using Content.Shared.Hands;
 using Content.Shared.Item;
 using Robust.Client.GameObjects;
@@ -28,6 +29,7 @@ public sealed class RecolorVisualizerSystem : VisualizerSystem<RecoloredComponen
         SubscribeLocalEvent<RecoloredComponent, GetEquipmentVisualsEvent>(ApplyRecolorEquipment,
             after: [typeof(ClientClothingSystem)]);
     }
+
 
     protected override void OnAppearanceChange(EntityUid uid, RecoloredComponent component, ref AppearanceChangeEvent args)
     {
