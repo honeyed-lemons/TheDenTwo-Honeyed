@@ -25,7 +25,7 @@ public sealed partial class RecolorApplierComponent : Component
     /// Sound to play when the doafter is over.
     /// </summary>
     [DataField]
-    public SoundSpecifier? DoafterSound = new SoundPathSpecifier("/Audio/Effects/Spray2.ogg");
+    public SoundSpecifier? DoafterSound = new SoundPathSpecifier("/Audio/Effects/spray2.ogg");
 
     /// <summary>
     /// Maximum amount of uses the applier can spray, if left null the applier can apply infinitely.

@@ -400,7 +400,7 @@
       color: &black "#333333"
       paintType: *paintType
       shaderBlacklist: *blacklist
-    colorName: black
+      colorName: black
   - type: Sprite
     layers:
     - state: spray-can-base
