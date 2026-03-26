@@ -93,10 +93,17 @@ public sealed partial class RecolorSystem
         args.Handled = true;
     }
 
-    private bool CanRecolor(Entity<RecolorApplierComponent> applier, EntityUid user, EntityUid target)
+    private bool CanRecolor(Entity<RecolorApplierComponent> applier, EntityUid user, EntityUid target, bool? verb = false)
     {
         // Check if the applier is opened
-        if (_openable.IsClosed(applier, user, predicted: true))
+
+        // All this code is to make sure not to send a popup if this is done with a verb. sigh
+        EntityUid? closedUser = user;
+
+        if (verb != null && verb.Value)
+            closedUser = null;
+
+        if (_openable.IsClosed(applier, closedUser, predicted: true))
             return false;
 
         // Check whitelist and blacklist
@@ -120,7 +127,7 @@ public sealed partial class RecolorSystem
     {
         if (!args.CanAccess
             || !args.CanInteract
-            || !CanRecolor(ent, args.User, args.Target))
+            || !CanRecolor(ent, args.User, args.Target, true))
             return;
 
         var user = args.User;
