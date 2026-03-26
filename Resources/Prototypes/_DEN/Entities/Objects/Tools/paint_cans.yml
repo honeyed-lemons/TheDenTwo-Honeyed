@@ -19,12 +19,13 @@
   - type: PhysicalComposition
     materialComposition:
       Steel: 100
-  - type: RecolorApplier # The important one
-    removable: true
-    paintType: spray paint
-    shaderBlacklist:
-    - unshaded # I don't want things becoming unshaded!!!
-    - DisplacedDraw # I don't want things becoming undisplaced!!!
+  - type: RecolorApplier # The important one\
+    recolorData:
+      color: white
+      paintType: &paintType spray paint
+      shaderBlacklist: &blacklist
+      - unshaded
+      - DisplacedDraw
     entityBlacklist:
       components:
       - HumanoidProfile # Prevent spraying on humans
@@ -43,8 +44,11 @@
   name: red spray paint
   components:
   - type: RecolorApplier
-    color: red
-    colorName: red
+    recolorData:
+      color: red
+      colorName: red
+      paintType: *paintType
+      shaderBlacklist: *blacklist
   - type: Sprite
     layers:
     - state: spray-can-base
@@ -65,8 +69,11 @@
   name: orange spray paint
   components:
   - type: RecolorApplier
-    color: orange
-    colorName: orange
+    recolorData:
+      color: orange
+      colorName: orange
+      paintType: *paintType
+      shaderBlacklist: *blacklist
   - type: Sprite
     layers:
     - state: spray-can-base
@@ -87,8 +94,11 @@
   name: yellow spray paint
   components:
   - type: RecolorApplier
-    color: yellow
-    colorName: yellow
+    recolorData:
+      color: yellow
+      colorName: yellow
+      paintType: *paintType
+      shaderBlacklist: *blacklist
   - type: Sprite
     layers:
     - state: spray-can-base
@@ -109,8 +119,11 @@
   name: lime green spray paint
   components:
   - type: RecolorApplier
-    color: greenyellow
-    colorName: lime green
+    recolorData:
+      color: greenyellow
+      colorName: lime green
+      paintType: *paintType
+      shaderBlacklist: *blacklist
   - type: Sprite
     layers:
     - state: spray-can-base
@@ -131,8 +144,11 @@
   name: green spray paint
   components:
   - type: RecolorApplier
-    color: green
-    colorName: green
+    recolorData:
+      color: green
+      colorName: green
+      paintType: *paintType
+      shaderBlacklist: *blacklist
   - type: Sprite
     layers:
     - state: spray-can-base
@@ -153,8 +169,11 @@
   name: cyan spray paint
   components:
   - type: RecolorApplier
-    color: cyan
-    colorName: cyan
+    recolorData:
+      color: cyan
+      colorName: cyan
+      paintType: *paintType
+      shaderBlacklist: *blacklist
   - type: Sprite
     layers:
     - state: spray-can-base
@@ -175,8 +194,11 @@
   name: blue spray paint
   components:
   - type: RecolorApplier
-    color: blue
-    colorName: blue
+    recolorData:
+      color: blue
+      colorName: blue
+      paintType: *paintType
+      shaderBlacklist: *blacklist
   - type: Sprite
     layers:
     - state: spray-can-base
@@ -197,8 +219,11 @@
   name: purple spray paint
   components:
   - type: RecolorApplier
-    color: purple
-    colorName: purple
+    recolorData:
+      color: purple
+      colorName: purple
+      paintType: *paintType
+      shaderBlacklist: *blacklist
   - type: Sprite
     layers:
     - state: spray-can-base
@@ -219,8 +244,11 @@
   name: pink spray paint
   components:
   - type: RecolorApplier
-    color: hotpink
-    colorName: pink
+    recolorData:
+      color: hotpink
+      colorName: pink
+      paintType: *paintType
+      shaderBlacklist: *blacklist
   - type: Sprite
     layers:
     - state: spray-can-base
@@ -243,8 +271,11 @@
   name: gold spray paint
   components:
   - type: RecolorApplier
-    color: gold
-    colorName: gold
+    recolorData:
+      color: gold
+      colorName: gold
+      paintType: *paintType
+      shaderBlacklist: *blacklist
   - type: Sprite
     layers:
     - state: spray-can-base
@@ -265,8 +296,11 @@
   name: silver spray paint
   components:
   - type: RecolorApplier
-    color: silver
-    colorName: silver
+    recolorData:
+      color: silver
+      colorName: silver
+      paintType: *paintType
+      shaderBlacklist: *blacklist
   - type: Sprite
     layers:
     - state: spray-can-base
@@ -287,8 +321,11 @@
   name: copper spray paint
   components:
   - type: RecolorApplier
-    color: chocolate
-    colorName: copper
+    recolorData:
+      color: chocolate
+      colorName: copper
+      paintType: *paintType
+      shaderBlacklist: *blacklist
   - type: Sprite
     layers:
     - state: spray-can-base
@@ -311,7 +348,10 @@
   name: white spray paint
   components:
   - type: RecolorApplier
-    color: white
+    recolorData:
+      color: white
+      paintType: *paintType
+      shaderBlacklist: *blacklist
   - type: Sprite
     layers:
     - state: spray-can-base
@@ -332,7 +372,10 @@
   name: gray spray paint
   components:
   - type: RecolorApplier
-    color: gray
+    recolorData:
+      color: gray
+      paintType: *paintType
+      shaderBlacklist: *blacklist
   - type: Sprite
     layers:
     - state: spray-can-base
@@ -353,7 +396,10 @@
   name: black spray paint
   components:
   - type: RecolorApplier
-    color: &black "#333333"
+    recolorData:
+      color: &black "#333333"
+      paintType: *paintType
+      shaderBlacklist: *blacklist
     colorName: black
   - type: Sprite
     layers:
@@ -375,8 +421,11 @@
   name: brown spray paint
   components:
   - type: RecolorApplier
-    color: saddlebrown
-    colorName: brown
+    recolorData:
+      color: saddlebrown
+      colorName: brown
+      paintType: *paintType
+      shaderBlacklist: *blacklist
   - type: Sprite
     layers:
     - state: spray-can-base
@@ -399,7 +448,10 @@
   name: magic spray paint
   components:
   - type: RecolorApplier
-    color: white
+    recolorData:
+      color: white
+      paintType: *paintType
+      shaderBlacklist: *blacklist
   - type: RecolorApplierColorSelector
   - type: ActivatableUI
     blockSpectators: true
@@ -440,8 +492,11 @@
   name: invisible spray paint
   components:
   - type: RecolorApplier
-    color: "#FFFFFF00"
-    colorName: invisible
+    recolorData:
+      color: "#FFFFFF00"
+      colorName: invisible
+      paintType: *paintType
+      shaderBlacklist: *blacklist
   - type: Sprite
     layers:
     - state: spray-can-base

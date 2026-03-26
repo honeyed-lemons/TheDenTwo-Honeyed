@@ -11,7 +11,7 @@ public sealed partial class RecolorSystem
             || !TryComp<RecolorApplierComponent>(ent.Owner, out var recolorApplier))
             return;
 
-        var state = new RecolorApplierColorState(recolorApplier.Color);
+        var state = new RecolorApplierColorState(recolorApplier.RecolorData.Color);
         _ui.SetUiState(ent.Owner, key, state);
     }
 

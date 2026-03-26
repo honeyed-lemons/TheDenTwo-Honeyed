@@ -12,8 +12,7 @@ public sealed partial class RecolorSystem
     {
         if (args.Target == null || args.Handled || !args.CanReach)
             return;
-
-        if (!TryComp<RecoloredComponent>(args.Target, out var recolored) || !recolored.Removable)
+        if (!TryComp<RecoloredComponent>(args.Target, out var recolored) || !recolored.RecolorData.Removable)
             return;
 
         args.Handled = TryStartRemoveRecolorDoAfter(args.User, (args.Target.Value, recolored), ent);
@@ -39,8 +38,10 @@ public sealed partial class RecolorSystem
             BreakOnHandChange = true,
         };
 
-        if (target.Comp.PaintType != null)
-            _popup.PopupClient(Loc.GetString("recolor-remover-start-popup", ("name", target), ("paintType", target.Comp.PaintType)),remover,user);
+        var recolorData = target.Comp.RecolorData;
+
+        if (recolorData.PaintType != null)
+            _popup.PopupClient(Loc.GetString("recolor-remover-start-popup", ("name", target), ("paintType", recolorData.PaintType)),remover,user);
 
         return _doAfter.TryStartDoAfter(doAfterArgs);
     }
@@ -50,12 +51,14 @@ public sealed partial class RecolorSystem
         if (args.Handled || args.Cancelled || !TryComp<RecoloredComponent>(args.Target, out var recolored))
             return;
 
+        var recolorData = recolored.RecolorData;
+
         RemoveRecolor((args.Target.Value, recolored));
 
         _audio.PlayPredicted(ent.Comp.DoafterSound, ent, args.User);
 
-        if (recolored.PaintType != null)
-            _popup.PopupClient(Loc.GetString("recolor-remover-finish-popup", ("name", args.Target), ("paintType", recolored.PaintType)), ent, args.User);
+        if (recolorData.PaintType != null)
+            _popup.PopupClient(Loc.GetString("recolor-remover-finish-popup", ("name", args.Target), ("paintType", recolorData.PaintType)), ent, args.User);
 
         args.Handled = true;
     }
@@ -65,7 +68,7 @@ public sealed partial class RecolorSystem
         if (!args.CanInteract || !args.CanAccess)
             return;
 
-        if (!TryComp<RecoloredComponent>(args.Target, out var recolored) || !recolored.Removable)
+        if (!TryComp<RecoloredComponent>(args.Target, out var recolored) || !recolored.RecolorData.Removable)
             return;
 
         var user = args.User;

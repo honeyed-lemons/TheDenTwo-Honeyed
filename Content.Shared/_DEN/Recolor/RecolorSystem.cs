@@ -8,6 +8,7 @@ using Content.Shared.Verbs;
 using Content.Shared.Whitelist;
 using JetBrains.Annotations;
 using Robust.Shared.Audio.Systems;
+using Robust.Shared.ColorNaming;
 using Robust.Shared.Serialization;
 
 namespace Content.Shared._DEN.Recolor;
@@ -63,18 +64,24 @@ public sealed partial class RecolorSystem : EntitySystem
         if (!args.IsInDetailsRange)
             return;
 
-        if (ent.Comp.PaintType != null)
-            args.PushMarkup(Loc.GetString("recolored-examine", ("color", ent.Comp.Color), ("paintType", ent.Comp.PaintType)));
+        var recolorData = ent.Comp.RecolorData;
+
+        if (recolorData is { PaintType: not null})
+        {
+            var colorName = GetColorName(recolorData);
+
+            args.PushMarkup(Loc.GetString(
+                "recolored-examine",
+                ("color", recolorData.Color),
+                ("colorName", colorName),
+                ("paintType", recolorData.PaintType)));
+        }
     }
 
     [PublicAPI]
-    public void Recolor(EntityUid uid,
-        Color color,
-        bool removable,
-        string? shader = null,
-        string? paintType = null,
-        List<string>? shaderWhitelist = null,
-        List<string>? shaderBlacklist = null)
+    public void Recolor(
+        EntityUid uid,
+        RecolorData recolorData)
     {
         if (HasComp<RecoloredComponent>(uid))
         {
@@ -86,12 +93,7 @@ public sealed partial class RecolorSystem : EntitySystem
 
         var comp = new RecoloredComponent
         {
-            Color = color,
-            Removable = removable,
-            Shader = shader,
-            PaintType = paintType,
-            ShaderBlacklist = shaderBlacklist,
-            ShaderWhitelist = shaderWhitelist,
+            RecolorData = recolorData,
         };
 
         AddComp(uid, comp);
@@ -107,39 +109,75 @@ public sealed partial class RecolorSystem : EntitySystem
         RemComp(ent, ent.Comp);
     }
 
+    private string GetColorName(RecolorData recolorData)
+    {
+        // Get the color's name. If the color itself has a color defined, use it
+        return recolorData.ColorName ??
+                        // Otherwise, use what colornaming THINKS it is.
+                        ColorNaming.Describe(recolorData.Color, _localizationManager);
+    }
+
     private void RefreshVisuals(Entity<RecoloredComponent> ent)
     {
         if (!TryComp(ent, out AppearanceComponent? appearance))
             return;
 
-        _appearance.SetData(ent, RecolorVisuals.Color, ent.Comp.Color, appearance);
+        var recolorData = ent.Comp.RecolorData;
 
-        if (ent.Comp.Shader != null)
-            _appearance.SetData(ent, RecolorVisuals.Shader, ent.Comp.Shader, appearance);
-        if (ent.Comp.ShaderWhitelist != null)
-            _appearance.SetData(ent, RecolorVisuals.ShaderWhitelist, ent.Comp.ShaderWhitelist, appearance);
-        if (ent.Comp.ShaderBlacklist != null)
-            _appearance.SetData(ent, RecolorVisuals.ShaderBlacklist, ent.Comp.ShaderBlacklist, appearance);
+        _appearance.SetData(ent, RecolorVisuals.RecolorData, recolorData, appearance);
     }
 
     private void RemoveVisuals(Entity<RecoloredComponent> ent)
     {
-        _appearance.RemoveData(ent, RecolorVisuals.Color);
-        _appearance.RemoveData(ent, RecolorVisuals.Shader);
-        _appearance.RemoveData(ent, RecolorVisuals.ShaderBlacklist);
-        _appearance.RemoveData(ent, RecolorVisuals.ShaderWhitelist);
+        _appearance.RemoveData(ent, RecolorVisuals.RecolorData);
     }
+}
+
+[Serializable, NetSerializable]
+[DataDefinition]
+public sealed partial class RecolorData
+{
+    /// <summary>
+    /// Color to recolor with.
+    /// </summary>
+    [DataField]
+    public Color Color { get; set; } = Color.White;
+    /// <summary>
+    /// Whether the Recolor can be removed by the RecolorRemoverSystem.
+    /// </summary>
+    [DataField]
+    public bool Removable { get; set; } = true;
+    /// <summary>
+    /// Name of the color, purely for flavor.
+    /// </summary>
+    [DataField]
+    public string? ColorName { get; set; }
+    /// <summary>
+    /// Purely for flavor, used for locale information.
+    /// </summary>
+    [DataField]
+    public string? PaintType { get; set; }
+    /// <summary>
+    /// Replaces layers shader with this shader.
+    /// </summary>
+    [DataField]
+    public string? Shader { get; set; } = "Desaturated";
+    /// <summary>
+    /// If used, these will be the only shaders replaced.
+    /// </summary>
+    [DataField]
+    public List<string>? ShaderBlacklist { get; set; }
+    /// <summary>
+    /// If used, these shaders will never be replaced.
+    /// </summary>
+    [DataField]
+    public List<string>? ShaderWhitelist { get; set; }
 }
 
 [Serializable, NetSerializable]
 public sealed partial class ApplyRecolorDoAfterEvent : DoAfterEvent
 {
-    public Color Color;
-    public bool Removable;
-    public List<string>? ShaderBlacklist;
-    public List<string>? ShaderWhitelist;
-    public string? Shader;
-    public string? PaintType;
+    public RecolorData RecolorData;
 
     public override DoAfterEvent Clone()
     {
@@ -154,8 +192,5 @@ public sealed partial class RemoveRecolorDoAfterEvent : SimpleDoAfterEvent;
 [Serializable, NetSerializable]
 public enum RecolorVisuals
 {
-    Color,
-    Shader,
-    ShaderWhitelist,
-    ShaderBlacklist,
+    RecolorData
 }

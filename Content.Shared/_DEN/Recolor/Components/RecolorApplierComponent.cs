@@ -9,19 +9,11 @@ namespace Content.Shared._DEN.Recolor.Components;
 public sealed partial class RecolorApplierComponent : Component
 {
 
-    //Recolor Applier Specific Datafields
-
     /// <summary>
-    /// The color to apply to the object being recolored.
+    /// RecolorData to recolor items with.
     /// </summary>
-    [DataField]
-    public string? ColorName;
-
-    /// <summary>
-    /// Type of paint used, purely for flavor.
-    /// </summary>
-    [DataField]
-    public string? PaintType;
+    [DataField, AutoNetworkedField]
+    public RecolorData RecolorData;
 
     /// <summary>
     /// How long it takes for this object to apply the recolor to the target.
@@ -94,37 +86,4 @@ public sealed partial class RecolorApplierComponent : Component
     /// </summary>
     [DataField]
     public SpriteSpecifier VerbIcon = new SpriteSpecifier.Texture(new ResPath("/Textures/_DEN/Interface/VerbIcons/paint-spray-can.svg.192dpi.png"));
-
-    // Recolor Datafields
-
-    /// <summary>
-    /// The color to apply to the object being recolored.
-    /// </summary>
-    [DataField, AutoNetworkedField]
-    public Color Color { get; set; }
-
-    /// <summary>
-    /// Whether the color applied can be removed via normal means.
-    /// </summary>
-    [DataField,AutoNetworkedField]
-    public bool Removable = true;
-
-    /// <summary>
-    /// Don't apply shader to layers with these shaders. (Sorry about the lack of shader prototype)
-    /// </summary>
-    [DataField]
-    public List<string>? ShaderBlacklist;
-
-    /// <summary>
-    /// Only apply shader to layers with these shaders.
-    /// </summary>
-    [DataField]
-    public List<string>? ShaderWhitelist;
-
-    /// <summary>
-    /// The shader to apply to the recolored entity.
-    /// Sorry, we don't have ShaderPrototype in Shared, because ShaderPrototype is clientside.
-    /// </summary>
-    [DataField]
-    public string? Shader = "Desaturated";
 }

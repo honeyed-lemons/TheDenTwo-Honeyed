@@ -5,4 +5,4 @@ spray-paint-examine-uses = There { $uses ->
 *[other] are [color=yellow]{$uses}[/color] sprays
 } left.
 
-recolored-examine = It is covered in [color={$color}]{$paintType}[/color].
+recolored-examine = It is covered in [color={$color}]{$colorName}[/color] {$paintType}.

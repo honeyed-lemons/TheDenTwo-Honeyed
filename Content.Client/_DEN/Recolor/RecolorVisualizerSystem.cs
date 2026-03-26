@@ -69,19 +69,20 @@ public sealed class RecolorVisualizerSystem : VisualizerSystem<RecoloredComponen
         if(!TryComp<AppearanceComponent>(ent, out var appearance))
             return;
 
-        var appearanceData = GetRecolorAppearanceData((ent.Owner,appearance));
+        if (!AppearanceSystem.TryGetData(ent, RecolorVisuals.RecolorData, out RecolorData recolorData))
+            return;
 
         foreach (var (_, layerData) in layers)
         {
             // Apply Color
-            layerData.Color = appearanceData.Color;
+            layerData.Color = recolorData.Color;
 
             //Test shader whitelists and blacklists
-            if (!AllowedShader(layerData.Shader, appearanceData))
+            if (!AllowedShader(layerData.Shader, recolorData))
                 continue;
 
             // Apply shaders
-            layerData.Shader = appearanceData.Shader;
+            layerData.Shader = recolorData.Shader;
         }
     }
 
@@ -90,7 +91,8 @@ public sealed class RecolorVisualizerSystem : VisualizerSystem<RecoloredComponen
         if(!TryComp<AppearanceComponent>(ent, out var appearance))
             return;
 
-        var appearanceData = GetRecolorAppearanceData((ent.Owner,appearance));
+        if (!AppearanceSystem.TryGetData(ent, RecolorVisuals.RecolorData, out RecolorData recolorData))
+            return;
 
         for (var i = 0; i < sprite.AllLayers.Count(); i++)
         {
@@ -98,16 +100,16 @@ public sealed class RecolorVisualizerSystem : VisualizerSystem<RecoloredComponen
                 continue;
 
             // Apply color
-            SpriteSystem.LayerSetColor(layer, appearanceData.Color);
+            SpriteSystem.LayerSetColor(layer, recolorData.Color);
 
             var layerShader = layer.ShaderPrototype;
 
-            if (!AllowedShader(layerShader?.Id, appearanceData))
+            if (!AllowedShader(layerShader?.Id, recolorData))
                 continue;
 
             // Apply shaders
-            if (appearanceData.Shader != null)
-                sprite.LayerSetShader(i, appearanceData.Shader);
+            if (recolorData.Shader != null)
+                sprite.LayerSetShader(i, recolorData.Shader);
         }
     }
 
@@ -116,7 +118,8 @@ public sealed class RecolorVisualizerSystem : VisualizerSystem<RecoloredComponen
         if(!TryComp<AppearanceComponent>(ent, out var appearance))
             return;
 
-        var appearanceData = GetRecolorAppearanceData((ent.Owner,appearance));
+        if (!AppearanceSystem.TryGetData(ent, RecolorVisuals.RecolorData, out RecolorData recolorData))
+            return;
 
         for (var i = 0; i < sprite.AllLayers.Count(); i++)
         {
@@ -131,26 +134,14 @@ public sealed class RecolorVisualizerSystem : VisualizerSystem<RecoloredComponen
             // Remove shaders
             var layerShader = layer.ShaderPrototype;
 
-            if (!AllowedShader(layerShader?.Id, appearanceData))
+            if (!AllowedShader(layerShader?.Id, recolorData))
                 continue;
 
             sprite.LayerSetShader(i, null, null);
         }
     }
 
-    private record RecolorAppearanceData(Color Color, string? Shader,List<string>? ShaderBlacklist, List<string>? ShaderWhitelist);
-
-    private RecolorAppearanceData GetRecolorAppearanceData(Entity<AppearanceComponent> ent)
-    {
-        AppearanceSystem.TryGetData(ent, RecolorVisuals.Color, out Color color);
-        AppearanceSystem.TryGetData(ent, RecolorVisuals.Shader, out string? shader);
-        AppearanceSystem.TryGetData(ent, RecolorVisuals.ShaderBlacklist, out List<string>? shaderBlacklist);
-        AppearanceSystem.TryGetData(ent, RecolorVisuals.ShaderWhitelist, out List<string>? shaderWhitelist);
-
-        return new RecolorAppearanceData(color, shader, shaderBlacklist, shaderWhitelist);
-    }
-
-    private static bool AllowedShader(string? shader, RecolorAppearanceData appearanceData)
+    private static bool AllowedShader(string? shader, RecolorData appearanceData)
     {
         if (shader == null)
             return true;

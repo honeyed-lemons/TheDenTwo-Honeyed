@@ -13,11 +13,13 @@ public sealed partial class RecolorSystem
     [PublicAPI]
     public void ChangeColor(Entity<RecolorApplierComponent> ent, Color color, string? colorName = null)
     {
-        if (color == ent.Comp.Color)
+        var recolorData = ent.Comp.RecolorData;
+
+        if (color == recolorData.Color)
             return;
 
-        ent.Comp.Color = color;
-        ent.Comp.ColorName = colorName ?? null;
+        recolorData.Color = color;
+        recolorData.ColorName = colorName ?? null;
 
         Dirty(ent);
     }
@@ -48,12 +50,7 @@ public sealed partial class RecolorSystem
     {
         var doAfterEvent = new ApplyRecolorDoAfterEvent
         {
-            Color = applier.Comp.Color,
-            PaintType = applier.Comp.PaintType,
-            Shader = applier.Comp.Shader,
-            ShaderBlacklist = applier.Comp.ShaderBlacklist,
-            ShaderWhitelist = applier.Comp.ShaderWhitelist,
-            Removable = applier.Comp.Removable,
+            RecolorData = applier.Comp.RecolorData,
         };
 
         var doAfterArgs = new DoAfterArgs(EntityManager,
@@ -79,12 +76,7 @@ public sealed partial class RecolorSystem
 
         Recolor(
             uid: args.Target.Value,
-            color: args.Color,
-            removable: args.Removable,
-            paintType: args.PaintType,
-            shader: args.Shader,
-            shaderWhitelist: args.ShaderWhitelist,
-            shaderBlacklist: args.ShaderBlacklist
+            recolorData: args.RecolorData
         );
 
         _audio.PlayPredicted(ent.Comp.DoafterSound, ent, args.User);
@@ -143,12 +135,11 @@ public sealed partial class RecolorSystem
     {
         if (!args.IsInDetailsRange)
             return;
-        // Get the color's name. If the color itself has a color defined, use it
-        var colorName = ent.Comp.ColorName ??
-                        // Otherwise, use what colornaming THINKS it is.
-                        ColorNaming.Describe(ent.Comp.Color, _localizationManager);
+        var recolorData = ent.Comp.RecolorData;
 
-        args.PushMarkup(Loc.GetString(ent.Comp.ColorShowcaseExamine, ("color", ent.Comp.Color), ("colorName", colorName)));
+        var colorName = GetColorName(recolorData);
+
+        args.PushMarkup(Loc.GetString(ent.Comp.ColorShowcaseExamine, ("color", recolorData.Color), ("colorName", colorName)));
 
         // If max uses isn't null (signifying this item has infinite uses), show uses count
         if (ent.Comp.MaxUses != null)
