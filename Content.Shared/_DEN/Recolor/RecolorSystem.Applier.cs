@@ -4,12 +4,17 @@ using Content.Shared.Examine;
 using Content.Shared.Interaction;
 using Content.Shared.Verbs;
 using JetBrains.Annotations;
-using Robust.Shared.ColorNaming;
 
 namespace Content.Shared._DEN.Recolor;
 
 public sealed partial class RecolorSystem
 {
+    /// <summary>
+    /// Change the color any given recolor applier applies.
+    /// </summary>
+    /// <param name="ent">Recolor applier to change the color of.</param>
+    /// <param name="color">Color to change to.</param>
+    /// <param name="colorName">Name of the color you're changing to, purely for flavor.</param>
     [PublicAPI]
     public void ChangeColor(Entity<RecolorApplierComponent> ent, Color color, string? colorName = null)
     {

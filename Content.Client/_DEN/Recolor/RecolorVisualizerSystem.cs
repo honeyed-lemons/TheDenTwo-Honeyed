@@ -4,12 +4,8 @@ using Content.Client.Items.Systems;
 using Content.Shared._DEN.Recolor;
 using Content.Shared._DEN.Recolor.Components;
 using Content.Shared.Clothing;
-using Content.Shared.Examine;
 using Content.Shared.Hands;
-using Content.Shared.Item;
 using Robust.Client.GameObjects;
-using Robust.Client.Graphics;
-using Robust.Shared.Prototypes;
 
 namespace Content.Client._DEN.Recolor;
 
@@ -69,7 +65,7 @@ public sealed class RecolorVisualizerSystem : VisualizerSystem<RecoloredComponen
         if(!TryComp<AppearanceComponent>(ent, out var appearance))
             return;
 
-        if (!AppearanceSystem.TryGetData(ent, RecolorVisuals.RecolorData, out RecolorData recolorData))
+        if (!AppearanceSystem.TryGetData(ent, RecolorVisuals.RecolorData, out RecolorData recolorData,appearance))
             return;
 
         foreach (var (_, layerData) in layers)
@@ -91,7 +87,7 @@ public sealed class RecolorVisualizerSystem : VisualizerSystem<RecoloredComponen
         if(!TryComp<AppearanceComponent>(ent, out var appearance))
             return;
 
-        if (!AppearanceSystem.TryGetData(ent, RecolorVisuals.RecolorData, out RecolorData recolorData))
+        if (!AppearanceSystem.TryGetData(ent, RecolorVisuals.RecolorData, out RecolorData recolorData, appearance))
             return;
 
         for (var i = 0; i < sprite.AllLayers.Count(); i++)
@@ -118,7 +114,7 @@ public sealed class RecolorVisualizerSystem : VisualizerSystem<RecoloredComponen
         if(!TryComp<AppearanceComponent>(ent, out var appearance))
             return;
 
-        if (!AppearanceSystem.TryGetData(ent, RecolorVisuals.RecolorData, out RecolorData recolorData))
+        if (!AppearanceSystem.TryGetData(ent, RecolorVisuals.RecolorData, out RecolorData recolorData, appearance))
             return;
 
         for (var i = 0; i < sprite.AllLayers.Count(); i++)

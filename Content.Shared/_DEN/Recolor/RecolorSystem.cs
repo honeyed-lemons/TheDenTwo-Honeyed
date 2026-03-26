@@ -39,6 +39,7 @@ public sealed partial class RecolorSystem : EntitySystem
         SubscribeLocalEvent<RecolorApplierComponent, ComponentStartup>(OnComponentStartup);
         SubscribeLocalEvent<RecolorApplierComponent, GetVerbsEvent<UtilityVerb>>(OnGetApplierVerbs);
         SubscribeLocalEvent<RecolorApplierComponent, ExaminedEvent>(OnExamined);
+
         // Recolor Applier Color Selector Events
         SubscribeLocalEvent<RecolorApplierColorSelectorComponent, BoundUIOpenedEvent>(OnBoundUIOpened);
         SubscribeLocalEvent<RecolorApplierColorSelectorComponent, RecolorApplierColorMessage>(OnRecolorApplierColorChanged);
@@ -47,6 +48,85 @@ public sealed partial class RecolorSystem : EntitySystem
         SubscribeLocalEvent<RecolorRemoverComponent, AfterInteractEvent>(OnRecolorRemoverAfterInteract);
         SubscribeLocalEvent<RecolorRemoverComponent, GetVerbsEvent<UtilityVerb>>(OnGetRemoverVerbs);
         SubscribeLocalEvent<RecolorRemoverComponent, RemoveRecolorDoAfterEvent>(OnRemoveRecolorDoAfterEvent);
+    }
+
+    /// <summary>
+    /// Recolor an entity using provided recolorData.
+    /// </summary>
+    /// <param name="uid">Entity to recolor.</param>
+    /// <param name="recolorData">Recolor data to use when recoloring.</param>
+    [PublicAPI]
+    public void Recolor(
+        EntityUid uid,
+        RecolorData recolorData)
+    {
+        if (HasComp<RecoloredComponent>(uid))
+        {
+            //Replace old recolored component. you can spray things with paint twice.. right?
+            RemComp<RecoloredComponent>(uid);
+        }
+
+        EnsureComp<AppearanceComponent>(uid);
+
+        var comp = new RecoloredComponent
+        {
+            RecolorData = recolorData,
+        };
+
+        AddComp(uid, comp);
+        Dirty<RecoloredComponent>((uid, comp));
+    }
+
+    /// <summary>
+    /// Recolor an entity with simple parameters.
+    /// </summary>
+    /// <param name="uid">Entity to recolor.</param>
+    /// <param name="color">Color to recolor to.</param>
+    /// <param name="removable">If the recoloring can be removed by regular means.</param>
+    /// <param name="shader">Shader to replace default shaders with.</param>
+    /// <param name="paintType">Paint type to use, purely for flavor.</param>
+    /// <param name="examineText">Examine text LocId to use.</param>
+    [PublicAPI]
+    public void Recolor(
+        EntityUid uid,
+        Color color,
+        bool removable,
+        string? shader,
+        string? paintType,
+        string examineText = "recolored-examine")
+    {
+        if (HasComp<RecoloredComponent>(uid))
+        {
+            //Replace old recolored component. you can spray things with paint twice.. right?
+            RemComp<RecoloredComponent>(uid);
+        }
+
+        EnsureComp<AppearanceComponent>(uid);
+
+        var comp = new RecoloredComponent
+        {
+            RecolorData = new RecolorData
+            {
+                Color = color,
+                Removable = removable,
+                Shader = shader,
+                PaintType = paintType,
+            },
+            ExamineText = examineText,
+        };
+
+        AddComp(uid, comp);
+        Dirty<RecoloredComponent>((uid, comp));
+    }
+
+    /// <param name="ent">Entity to remove the recolor of.</param>
+    [PublicAPI]
+    public void RemoveRecolor(Entity<RecoloredComponent?> ent)
+    {
+        if (!Resolve(ent.Owner, ref ent.Comp, logMissing: false))
+            return;
+
+        RemComp(ent, ent.Comp);
     }
 
     private void OnComponentStartup(Entity<RecoloredComponent> ent, ref ComponentStartup args)
@@ -71,43 +151,13 @@ public sealed partial class RecolorSystem : EntitySystem
             var colorName = GetColorName(recolorData);
 
             args.PushMarkup(Loc.GetString(
-                "recolored-examine",
+                ent.Comp.ExamineText,
                 ("color", recolorData.Color),
                 ("colorName", colorName),
                 ("paintType", recolorData.PaintType)));
         }
     }
 
-    [PublicAPI]
-    public void Recolor(
-        EntityUid uid,
-        RecolorData recolorData)
-    {
-        if (HasComp<RecoloredComponent>(uid))
-        {
-            //Replace old recolored component. you can spray things with paint twice.. right?
-            RemComp<RecoloredComponent>(uid);
-        }
-
-        EnsureComp<AppearanceComponent>(uid);
-
-        var comp = new RecoloredComponent
-        {
-            RecolorData = recolorData,
-        };
-
-        AddComp(uid, comp);
-        Dirty<RecoloredComponent>((uid, comp));
-    }
-
-    [PublicAPI]
-    public void RemoveRecolor(Entity<RecoloredComponent?> ent)
-    {
-        if (!Resolve(ent.Owner, ref ent.Comp, logMissing: false))
-            return;
-
-        RemComp(ent, ent.Comp);
-    }
 
     private string GetColorName(RecolorData recolorData)
     {
@@ -133,6 +183,9 @@ public sealed partial class RecolorSystem : EntitySystem
     }
 }
 
+/// <summary>
+/// Stores information regarding recolored objects.
+/// </summary>
 [Serializable, NetSerializable]
 [DataDefinition]
 public sealed partial class RecolorData

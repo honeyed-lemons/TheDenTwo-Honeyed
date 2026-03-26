@@ -10,4 +10,10 @@ public sealed partial class RecoloredComponent : Component
     /// </summary>
     [DataField, AutoNetworkedField]
     public RecolorData RecolorData;
+
+    /// <summary>
+    /// Examine text as a locid.
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public LocId ExamineText = "recolored-examine";
 }

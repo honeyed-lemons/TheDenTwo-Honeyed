@@ -1,6 +1,5 @@
 using Content.Shared._DEN.Recolor;
 using Robust.Client.UserInterface;
-using Robust.Shared.Prototypes;
 
 namespace Content.Client._DEN.Recolor.UI;
 
