@@ -30,13 +30,13 @@ public sealed partial class RecolorApplierComponent : Component
     /// <summary>
     /// Maximum amount of uses the applier can spray, if left null the applier can apply infinitely.
     /// </summary>
-    [ViewVariables(VVAccess.ReadWrite)]
+    [DataField]
     public int? MaxUses;
 
     /// <summary>
     /// Current amount of uses the applier can spray.
     /// </summary>
-    [DataField, AutoNetworkedField]
+    [ViewVariables(VVAccess.ReadWrite)]
     public int UsesLeft;
 
     /// <summary>
