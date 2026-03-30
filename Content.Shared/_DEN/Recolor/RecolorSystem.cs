@@ -2,6 +2,7 @@ using Content.Shared._DEN.Recolor.Components;
 using Content.Shared.DoAfter;
 using Content.Shared.Examine;
 using Content.Shared.Interaction;
+using Content.Shared.Item;
 using Content.Shared.Nutrition.EntitySystems;
 using Content.Shared.Popups;
 using Content.Shared.Verbs;
@@ -22,6 +23,7 @@ public sealed partial class RecolorSystem : EntitySystem
     [Dependency] private readonly SharedAppearanceSystem _appearance = default!;
     [Dependency] private readonly SharedAudioSystem _audio = default!;
     [Dependency] private readonly SharedDoAfterSystem _doAfter = default!;
+    [Dependency] private readonly SharedItemSystem _item = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
     [Dependency] private readonly SharedUserInterfaceSystem _ui = default!;
 
@@ -55,10 +57,12 @@ public sealed partial class RecolorSystem : EntitySystem
     /// </summary>
     /// <param name="uid">Entity to recolor.</param>
     /// <param name="recolorData">Recolor data to use when recoloring.</param>
+    /// <param name="recolorer">Entity that performed the recolor (As in, the item)</param>
     [PublicAPI]
     public void Recolor(
         EntityUid uid,
-        RecolorData recolorData)
+        RecolorData recolorData,
+        EntityUid? recolorer = null)
     {
         if (HasComp<RecoloredComponent>(uid))
         {
@@ -74,7 +78,12 @@ public sealed partial class RecolorSystem : EntitySystem
         };
 
         AddComp(uid, comp);
+        //Make sure to dirty the entity!
         Dirty<RecoloredComponent>((uid, comp));
+
+        //Raise event on recolored entity
+        var ev = new OnRecoloredEvent(uid, recolorData, recolorer);
+        RaiseLocalEvent(uid, ev);
     }
 
     /// <summary>
@@ -85,7 +94,7 @@ public sealed partial class RecolorSystem : EntitySystem
     /// <param name="removable">If the recoloring can be removed by regular means.</param>
     /// <param name="shader">Shader to replace default shaders with.</param>
     /// <param name="paintType">Paint type to use, purely for flavor.</param>
-    /// <param name="examineText">Examine text LocId to use.</param>
+    /// <param name="recolorer">Entity that performed the recolor (As in, the item)</param>
     [PublicAPI]
     public void Recolor(
         EntityUid uid,
@@ -93,30 +102,16 @@ public sealed partial class RecolorSystem : EntitySystem
         bool removable,
         string? shader,
         string? paintType,
-        string examineText = "recolored-examine")
+        EntityUid? recolorer = null)
     {
-        if (HasComp<RecoloredComponent>(uid))
+        var recolorData = new RecolorData
         {
-            //Replace old recolored component. you can spray things with paint twice.. right?
-            RemComp<RecoloredComponent>(uid);
-        }
-
-        EnsureComp<AppearanceComponent>(uid);
-
-        var comp = new RecoloredComponent
-        {
-            RecolorData = new RecolorData
-            {
-                Color = color,
-                Removable = removable,
-                Shader = shader,
-                PaintType = paintType,
-            },
-            ExamineText = examineText,
+            Color = color,
+            Removable = removable,
+            Shader = shader,
+            PaintType = paintType,
         };
-
-        AddComp(uid, comp);
-        Dirty<RecoloredComponent>((uid, comp));
+        Recolor(uid, recolorData, recolorer);
     }
 
     /// <param name="ent">Entity to remove the recolor of.</param>
@@ -125,6 +120,11 @@ public sealed partial class RecolorSystem : EntitySystem
     {
         if (!Resolve(ent.Owner, ref ent.Comp, logMissing: false))
             return;
+
+        var ev = new OnRecolorRemovedEvent(ent);
+        RaiseLocalEvent(ent, ev);
+
+        RemoveVisuals((ent,ent.Comp));
 
         RemComp(ent, ent.Comp);
     }
@@ -136,7 +136,7 @@ public sealed partial class RecolorSystem : EntitySystem
 
     private void OnComponentRemove(Entity<RecoloredComponent> ent, ref ComponentRemove args)
     {
-        RemoveVisuals(ent);
+        _item.VisualsChanged(ent);
     }
 
     private void OnExamined(Entity<RecoloredComponent> ent, ref ExaminedEvent args)
@@ -151,7 +151,7 @@ public sealed partial class RecolorSystem : EntitySystem
             var colorName = GetColorName(recolorData);
 
             args.PushMarkup(Loc.GetString(
-                ent.Comp.ExamineText,
+                ent.Comp.RecolorData.ExamineText,
                 ("color", recolorData.Color),
                 ("colorName", colorName),
                 ("paintType", recolorData.PaintType)));
@@ -201,6 +201,11 @@ public sealed partial class RecolorData
     [DataField]
     public bool Removable { get; set; } = true;
     /// <summary>
+    /// Examine text to display when examined
+    /// </summary>
+    [DataField]
+    public string ExamineText { get; set; } = "recolored-examine";
+    /// <summary>
     /// Name of the color, purely for flavor.
     /// </summary>
     [DataField]
@@ -241,9 +246,40 @@ public sealed partial class ApplyRecolorDoAfterEvent : DoAfterEvent
 [Serializable, NetSerializable]
 public sealed partial class RemoveRecolorDoAfterEvent : SimpleDoAfterEvent;
 
+/// <summary>
+/// Raised when an entity is recolored.
+/// </summary>
+public sealed class OnRecoloredEvent(EntityUid recolored, RecolorData recolorData, EntityUid? recolorer) : EntityEventArgs
+{
+    /// <summary>
+    /// Entity that was recolored.
+    /// </summary>
+    public EntityUid Recolored = recolored;
+
+    /// <summary>
+    /// Recolor data of the recolor.
+    /// </summary>
+    public RecolorData RecolorData = recolorData;
+
+    /// <summary>
+    /// Entity that recolored the entity (As in, the item).
+    /// </summary>
+    public EntityUid? Recolorer = recolorer;
+}
+
+/// <summary>
+/// Raised when an entity has its recoloring removed.
+/// </summary>
+public sealed class OnRecolorRemovedEvent(EntityUid recolorRemover) : EntityEventArgs
+{
+    /// <summary>
+    /// Entity that removed the recolor (as in, the item)
+    /// </summary>
+    public EntityUid RecolorRemover = recolorRemover;
+}
 
 [Serializable, NetSerializable]
 public enum RecolorVisuals
 {
-    RecolorData
+    RecolorData,
 }

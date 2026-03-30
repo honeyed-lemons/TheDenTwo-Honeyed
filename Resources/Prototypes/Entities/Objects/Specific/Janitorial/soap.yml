@@ -69,6 +69,9 @@
   - type: Residue
     residueAdjective: residue-slippery
   - type: RecolorRemover # DEN
+    entityBlacklist:
+      components:
+      - AttachedClothing # So you can't remove the paint off of just the helmet of something. Sue me.
 
 - type: entity
   parent: BaseSoap

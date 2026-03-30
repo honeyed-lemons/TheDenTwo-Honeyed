@@ -10,7 +10,10 @@ public sealed partial class RecolorSystem
 {
     private void OnRecolorRemoverAfterInteract(Entity<RecolorRemoverComponent> ent, ref AfterInteractEvent args)
     {
-        if (args.Target == null || args.Handled || !args.CanReach)
+        if (args.Target == null
+            || args.Handled
+            || !args.CanReach
+            || _whitelist.CheckBoth(args.Target,ent.Comp.EntityBlacklist,ent.Comp.EntityWhitelist))
             return;
         if (!TryComp<RecoloredComponent>(args.Target, out var recolored) || !recolored.RecolorData.Removable)
             return;
@@ -48,7 +51,10 @@ public sealed partial class RecolorSystem
 
     private void OnRemoveRecolorDoAfterEvent(Entity<RecolorRemoverComponent> ent, ref RemoveRecolorDoAfterEvent args)
     {
-        if (args.Handled || args.Cancelled || !TryComp<RecoloredComponent>(args.Target, out var recolored))
+        if (args.Handled
+            || args.Cancelled
+            || !TryComp<RecoloredComponent>(args.Target, out var recolored)
+            || _whitelist.CheckBoth(args.Target,ent.Comp.EntityBlacklist,ent.Comp.EntityWhitelist))
             return;
 
         var recolorData = recolored.RecolorData;

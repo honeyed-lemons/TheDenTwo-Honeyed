@@ -17,7 +17,7 @@ public sealed class RecolorVisualizerSystem : VisualizerSystem<RecoloredComponen
     {
         base.Initialize();
 
-        SubscribeLocalEvent<RecoloredComponent, ComponentShutdown>(OnComponentShutdown);
+        SubscribeLocalEvent<RecoloredComponent, OnRecolorRemovedEvent>(OnRecolorRemoved);
 
         SubscribeLocalEvent<RecoloredComponent, GetInhandVisualsEvent>(ApplyRecolorInHands,
             after: [typeof(ItemSystem)]);
@@ -25,7 +25,6 @@ public sealed class RecolorVisualizerSystem : VisualizerSystem<RecoloredComponen
         SubscribeLocalEvent<RecoloredComponent, GetEquipmentVisualsEvent>(ApplyRecolorEquipment,
             after: [typeof(ClientClothingSystem)]);
     }
-
 
     protected override void OnAppearanceChange(EntityUid uid, RecoloredComponent component, ref AppearanceChangeEvent args)
     {
@@ -38,11 +37,8 @@ public sealed class RecolorVisualizerSystem : VisualizerSystem<RecoloredComponen
         _item.VisualsChanged(uid);
     }
 
-    private void OnComponentShutdown(Entity<RecoloredComponent> ent, ref ComponentShutdown args)
+    private void OnRecolorRemoved(Entity<RecoloredComponent> ent, ref OnRecolorRemovedEvent args)
     {
-        if (TerminatingOrDeleted(ent.Owner))
-            return;
-
         if (!TryComp(ent, out SpriteComponent? sprite))
             return;
 

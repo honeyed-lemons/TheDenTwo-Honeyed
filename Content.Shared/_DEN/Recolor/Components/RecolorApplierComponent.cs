@@ -36,7 +36,7 @@ public sealed partial class RecolorApplierComponent : Component
     /// <summary>
     /// Current amount of uses the applier can spray.
     /// </summary>
-    [ViewVariables(VVAccess.ReadWrite)]
+    [ViewVariables(VVAccess.ReadWrite), AutoNetworkedField]
     public int UsesLeft;
 
     /// <summary>

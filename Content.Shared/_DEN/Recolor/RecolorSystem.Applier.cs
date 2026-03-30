@@ -81,7 +81,8 @@ public sealed partial class RecolorSystem
 
         Recolor(
             uid: args.Target.Value,
-            recolorData: args.RecolorData
+            recolorData: args.RecolorData,
+            recolorer: ent
         );
 
         _audio.PlayPredicted(ent.Comp.DoafterSound, ent, args.User);
@@ -109,14 +110,16 @@ public sealed partial class RecolorSystem
         // Check whitelist and blacklist
         if (!_whitelist.CheckBoth(target, applier.Comp.EntityBlacklist, applier.Comp.EntityWhitelist))
         {
-            _popup.PopupClient(Loc.GetString(applier.Comp.CantRecolorPopup, ("target", target)),applier, user);
+            if (verb == null || !verb.Value)
+                _popup.PopupClient(Loc.GetString(applier.Comp.CantRecolorPopup, ("target", target)), applier, user);
             return false;
         }
 
         // Check if there's enough uses left
         if (applier.Comp is { UsesLeft: <= 0, MaxUses: not null })
         {
-            _popup.PopupClient(Loc.GetString(applier.Comp.NoMoreUsesPopup, ("name", applier)),applier, user);
+            if (verb == null || !verb.Value)
+                _popup.PopupClient(Loc.GetString(applier.Comp.NoMoreUsesPopup, ("name", applier)),applier, user);
             return false;
         }
 

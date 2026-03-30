@@ -1,3 +1,4 @@
+using Content.Shared.Whitelist;
 using Robust.Shared.Audio;
 using Robust.Shared.GameStates;
 
@@ -18,4 +19,15 @@ public sealed partial class RecolorRemoverComponent : Component
     [DataField]
     public SoundSpecifier? DoafterSound;
 
+    /// <summary>
+    /// Only these entities will be able to have their recolor removed by this item.
+    /// </summary>
+    [DataField]
+    public EntityWhitelist? EntityWhitelist;
+
+    /// <summary>
+    /// These entities will not be able to have their recolor removed by this item.
+    /// </summary>
+    [DataField]
+    public EntityWhitelist? EntityBlacklist;
 }

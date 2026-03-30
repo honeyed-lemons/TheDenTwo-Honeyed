@@ -34,6 +34,7 @@
       - CableVisualizer # See above
       - AtmosPipeColor # It doesn't work currently, unsure why? Possibly because gaspipecolor visualizer runs first.
       - PipeColorVisuals # See above
+      - AttachedClothing # So you can't spray paint just the hood of a hoodie / hardsuit helmet. because I HATE YOU.
     maxUses: 64 # Might be too much? Unsure.
 
 # Rainbow colors
