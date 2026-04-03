@@ -150,14 +150,15 @@ public sealed partial class RecolorSystem
     {
         if (!args.IsInDetailsRange)
             return;
+
         var recolorData = ent.Comp.RecolorData;
 
         var colorName = GetColorName(recolorData);
-
-        args.PushMarkup(Loc.GetString(ent.Comp.ColorShowcaseExamine, ("color", recolorData.Color), ("colorName", colorName)));
+        if (ent.Comp.ColorShowcaseExamine != "")
+            args.PushMarkup(Loc.GetString(ent.Comp.ColorShowcaseExamine, ("color", recolorData.Color), ("colorName", colorName)));
 
         // If max uses isn't null (signifying this item has infinite uses), show uses count
-        if (ent.Comp.MaxUses != null)
+        if (ent.Comp.MaxUses != null && ent.Comp.UsesExamine != "")
             args.PushMarkup(Loc.GetString(ent.Comp.UsesExamine, ("uses", ent.Comp.UsesLeft)));
     }
 }

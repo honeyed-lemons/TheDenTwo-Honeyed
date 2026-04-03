@@ -146,7 +146,7 @@ public sealed partial class RecolorSystem : EntitySystem
 
         var recolorData = ent.Comp.RecolorData;
 
-        if (recolorData is { PaintType: not null})
+        if (recolorData is { PaintType: not null, ExamineText: not "" })
         {
             var colorName = GetColorName(recolorData);
 
