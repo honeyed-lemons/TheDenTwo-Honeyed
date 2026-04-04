@@ -20,10 +20,10 @@ public sealed class RecolorVisualizerSystem : VisualizerSystem<RecoloredComponen
         SubscribeLocalEvent<RecoloredComponent, OnRecolorRemovedEvent>(OnRecolorRemoved);
 
         SubscribeLocalEvent<RecoloredComponent, GetInhandVisualsEvent>(ApplyRecolorInHands,
-            after: [typeof(ItemSystem)]);
+            after: [typeof(ItemSystem)]); // Done so ItemSystem can handle sprite layers first, otherwise we apply our changes to nothing.
 
         SubscribeLocalEvent<RecoloredComponent, GetEquipmentVisualsEvent>(ApplyRecolorEquipment,
-            after: [typeof(ClientClothingSystem)]);
+            after: [typeof(ClientClothingSystem)]); // Same as above.
     }
 
     protected override void OnAppearanceChange(EntityUid uid, RecoloredComponent component, ref AppearanceChangeEvent args)

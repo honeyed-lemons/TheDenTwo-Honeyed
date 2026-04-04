@@ -7,7 +7,7 @@ using Robust.Client.UserInterface.XAML;
 namespace Content.Client._DEN.Recolor.UI;
 
 [GenerateTypedNameReferences]
-public sealed partial class RecolorApplierColorSelectorMenu: DefaultWindow
+public sealed partial class RecolorApplierColorSelectorMenu : DefaultWindow
 {
     public Action<Color>? OnColorChanged;
 

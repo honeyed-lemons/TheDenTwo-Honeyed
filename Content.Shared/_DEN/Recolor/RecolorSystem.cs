@@ -188,8 +188,9 @@ public sealed partial class RecolorSystem : EntitySystem
 /// </summary>
 [Serializable, NetSerializable]
 [DataDefinition]
-public sealed partial class RecolorData
+public partial record struct RecolorData
 {
+
     /// <summary>
     /// Color to recolor with.
     /// </summary>
@@ -278,6 +279,9 @@ public sealed class OnRecolorRemovedEvent(EntityUid recolorRemover) : EntityEven
     public EntityUid RecolorRemover = recolorRemover;
 }
 
+/// <summary>
+/// Used as AppearanceData, storing RecolorData on recolored entities.
+/// </summary>
 [Serializable, NetSerializable]
 public enum RecolorVisuals
 {

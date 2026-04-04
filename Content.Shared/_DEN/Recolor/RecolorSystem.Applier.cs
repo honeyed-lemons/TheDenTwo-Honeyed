@@ -154,6 +154,7 @@ public sealed partial class RecolorSystem
         var recolorData = ent.Comp.RecolorData;
 
         var colorName = GetColorName(recolorData);
+
         if (ent.Comp.ColorShowcaseExamine != "")
             args.PushMarkup(Loc.GetString(ent.Comp.ColorShowcaseExamine, ("color", recolorData.Color), ("colorName", colorName)));
 

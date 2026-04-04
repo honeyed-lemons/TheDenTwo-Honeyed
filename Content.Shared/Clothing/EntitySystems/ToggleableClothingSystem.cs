@@ -17,7 +17,7 @@ using Content.Shared._DEN.Recolor; // DEN (do i need to comment imports here. wh
 
 namespace Content.Shared.Clothing.EntitySystems;
 
-public sealed class ToggleableClothingSystem : EntitySystem
+public sealed partial class ToggleableClothingSystem : EntitySystem // DEN, made partial.
 {
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly INetManager _netMan = default!;
@@ -28,7 +28,6 @@ public sealed class ToggleableClothingSystem : EntitySystem
     [Dependency] private readonly SharedPopupSystem _popupSystem = default!;
     [Dependency] private readonly SharedDoAfterSystem _doAfter = default!;
     [Dependency] private readonly SharedStrippableSystem _strippable = default!;
-    [Dependency] private readonly RecolorSystem _recolor = default!; // DEN, recolor system
 
     public override void Initialize()
     {
@@ -302,24 +301,6 @@ public sealed class ToggleableClothingSystem : EntitySystem
         if (_actionContainer.EnsureAction(uid, ref component.ActionEntity, out var action, component.Action))
             _actionsSystem.SetEntityIcon((component.ActionEntity.Value, action), component.ClothingUid);
     }
-
-    // DEN, recolor system start
-    private void OnToggleableRecolored(Entity<ToggleableClothingComponent> ent, ref OnRecoloredEvent args)
-    {
-        var toggled = ent.Comp.ClothingUid;
-
-        if (toggled != null)
-            _recolor.Recolor(toggled.Value,args.RecolorData, args.Recolorer);
-    }
-
-    private void OnToggleableRecolorRemoved(Entity<ToggleableClothingComponent> ent, ref OnRecolorRemovedEvent args)
-    {
-        var toggled = ent.Comp.ClothingUid;
-
-        if (toggled != null)
-            _recolor.RemoveRecolor(toggled.Value);
-    }
-    // DEN, recolor system end
 }
 
 public sealed partial class ToggleClothingEvent : InstantActionEvent
