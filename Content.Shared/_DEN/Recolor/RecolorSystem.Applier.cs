@@ -26,6 +26,8 @@ public sealed partial class RecolorSystem
         recolorData.Color = color;
         recolorData.ColorName = colorName ?? null;
 
+        ent.Comp.RecolorData = recolorData;
+
         Dirty(ent);
     }
 
