@@ -152,7 +152,7 @@ public sealed partial class RecolorSystem : EntitySystem
 
             args.PushMarkup(Loc.GetString(
                 ent.Comp.RecolorData.ExamineText,
-                ("color", recolorData.Color),
+                ("color", recolorData.Color.WithAlpha(255)),
                 ("colorName", colorName),
                 ("paintType", recolorData.PaintType)));
         }
@@ -190,7 +190,6 @@ public sealed partial class RecolorSystem : EntitySystem
 [DataDefinition]
 public partial record struct RecolorData
 {
-
     /// <summary>
     /// Color to recolor with.
     /// </summary>

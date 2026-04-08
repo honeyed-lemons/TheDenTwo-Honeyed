@@ -87,7 +87,7 @@ public sealed partial class RecolorSystem
             recolorer: ent
         );
 
-        _audio.PlayPredicted(ent.Comp.DoafterSound, ent, args.User);
+        _audio.PlayPredicted(ent.Comp.DoAfterSound, ent, args.User);
 
         ent.Comp.UsesLeft -= 1;
 
@@ -158,7 +158,7 @@ public sealed partial class RecolorSystem
         var colorName = GetColorName(recolorData);
 
         if (ent.Comp.ColorShowcaseExamine != "")
-            args.PushMarkup(Loc.GetString(ent.Comp.ColorShowcaseExamine, ("color", recolorData.Color), ("colorName", colorName)));
+            args.PushMarkup(Loc.GetString(ent.Comp.ColorShowcaseExamine, ("color", recolorData.Color.WithAlpha(255)), ("colorName", colorName)));
 
         // If max uses isn't null (signifying this item has infinite uses), show uses count
         if (ent.Comp.MaxUses != null && ent.Comp.UsesExamine != "")

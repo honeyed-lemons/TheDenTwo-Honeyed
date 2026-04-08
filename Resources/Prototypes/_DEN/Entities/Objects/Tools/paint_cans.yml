@@ -1,5 +1,3 @@
-
-
 - type: entity
   parent: BaseItem
   id: SprayPaintCan
@@ -466,25 +464,42 @@
         type: RecolorApplierColorSelectorBui
   - type: Sprite
     layers:
-    - state: spray-can-rainbow
+    - state: spray-can-base
       map: ["Base"]
-    - state: spray-can-rainbow-cap
+    - state: spray-can-rainbow-closed
       map: ["enum.OpenableVisuals.Layer"]
   - type: GenericVisualizer
     visuals:
       enum.OpenableVisuals.Opened:
         enum.OpenableVisuals.Layer:
-          True: {visible: false}
-          False: {visible: true}
+          True: {state: "spray-can-rainbow-open"}
+          False: {state: "spray-can-rainbow-closed"}
 
 - type: entity
   parent: SprayPaintCanMagic
-  id: SprayPaintCanMagicMapping
-  suffix: do not map
+  id: SprayPaintCanMagicInfinite
+  suffix: DO NOT MAP
   name: infinite magic spray paint
   components:
   - type: RecolorApplier
     maxUses:
+
+- type: entity
+  parent: SprayPaintCanMagic
+  id: SprayPaintCanMagicMapping
+  suffix: DEBUG
+  name: mapping magic spray paint
+  components:
+  - type: RecolorApplier
+    recolorData:
+      color: white
+      paintType: *paintType
+      shaderBlacklist: *blacklist
+      removable: false
+      examineText: ""
+    maxUses:
+    doAfterSound:
+    doAfterDuration: 0
 
 - type: entity
   parent: SprayPaintCan

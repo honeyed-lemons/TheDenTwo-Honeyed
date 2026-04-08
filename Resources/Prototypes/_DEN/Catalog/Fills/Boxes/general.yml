@@ -2,6 +2,7 @@
   parent: BoxCardboard
   id: BoxSprayPaintBase
   abstract: true
+  suffix: Filled
   components:
   - type: Sprite
     layers:

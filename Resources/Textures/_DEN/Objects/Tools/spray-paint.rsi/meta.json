@@ -23,10 +23,10 @@
             "name": "spray-can-color-open"
         },
         {
-            "name": "spray-can-rainbow"
+            "name": "spray-can-rainbow-closed"
         },
         {
-            "name": "spray-can-rainbow-cap"
+            "name": "spray-can-rainbow-open"
         }
     ]
 }
