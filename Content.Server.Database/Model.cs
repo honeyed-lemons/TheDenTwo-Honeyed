@@ -350,6 +350,13 @@ namespace Content.Server.Database
 
         public int PreferenceId { get; set; }
         public Preference Preference { get; set; } = null!;
+
+        // DEN start, Height
+
+        public float Height { get; set; }
+        public float Width { get; set; }
+
+        // DEN end, Height
     }
 
     public class Job

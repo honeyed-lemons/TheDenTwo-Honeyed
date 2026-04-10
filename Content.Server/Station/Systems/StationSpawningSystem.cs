@@ -23,6 +23,8 @@ using Robust.Shared.Map;
 using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
+using System.Numerics; // DEN
+using Content.Shared.Sprite; // DEN
 
 namespace Content.Server.Station.Systems;
 
@@ -44,6 +46,7 @@ public sealed class StationSpawningSystem : SharedStationSpawningSystem
     [Dependency] private readonly PdaSystem _pdaSystem = default!;
     [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
     [Dependency] private readonly MindSystem _mindSystem = default!;
+    [Dependency] private readonly SharedScaleVisualsSystem _scaleVisuals = default!; // DEN
 
     /// <summary>
     /// Attempts to spawn a player character onto the given station.
@@ -143,6 +146,13 @@ public sealed class StationSpawningSystem : SharedStationSpawningSystem
             {
                 AddComp<DetailExaminableComponent>(entity.Value).Content = profile.FlavorText;
             }
+
+            //DEN, Height start
+            if (!profile.Height.Equals(species.DefaultHeight) && !profile.Height.Equals(species.DefaultHeight))
+            {
+                _scaleVisuals.SetSpriteScale(entity.Value, new Vector2(profile.Width, profile.Height));
+            }
+            //DEN, Height end
         }
 
         if (loadout != null)

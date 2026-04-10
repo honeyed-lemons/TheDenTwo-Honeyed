@@ -198,6 +198,7 @@ namespace Content.Client.Lobby.UI
                 SpeciesButton.SelectId(args.Id);
                 SetSpecies(_species[args.Id].ID);
                 OnSkinColorOnValueChanged();
+                UpdateScaleSliders(); // DEN
             };
 
             #region Skin
@@ -302,6 +303,37 @@ namespace Content.Client.Lobby.UI
             };
 
             #endregion Dummy
+            // DEN Start, Height Preview and Selector
+            #region Height
+
+            UpdateScaleLabels();
+
+            Height.OnValueChanged += _ =>
+            {
+                UpdateScale(false, true);
+                CharHeightView.InvalidateMeasure();
+                SpriteView.InvalidateMeasure();
+            };
+
+            Width.OnValueChanged += _ =>
+            {
+                UpdateScale(true, false);
+                CharHeightView.InvalidateMeasure();
+                SpriteView.InvalidateMeasure();
+            };
+
+            HeightReset.OnPressed += _ =>
+            {
+                ResetHeight();
+            };
+
+            WidthReset.OnPressed += _ =>
+            {
+                ResetWidth();
+            };
+
+            #endregion Height
+            // DEN End, Height Preview and Selector
 
             #endregion Left
 
@@ -342,6 +374,11 @@ namespace Content.Client.Lobby.UI
 
             SpriteView.LoadPreview(Profile, JobOverride, ShowClothes.Pressed);
 
+            // DEN Start, height view
+            UristHeightView.LoadPreview(new HumanoidCharacterProfile(), null, false);
+            CharHeightView.LoadPreview(Profile, JobOverride, ShowClothes.Pressed);
+            // DEN End, height view
+
             // Check and set the dirty flag to enable the save/reset buttons as appropriate.
             SetDirty();
         }
@@ -376,6 +413,7 @@ namespace Content.Client.Lobby.UI
             UpdateEyePickers();
             UpdateSaveButton();
             UpdateMarkings();
+            UpdateScaleSliders(); // DEN
 
             RefreshAntags();
             RefreshJobs();
@@ -400,6 +438,11 @@ namespace Content.Client.Lobby.UI
                 return;
 
             SpriteView.ReloadProfilePreview(Profile);
+
+            // DEN Start, height view
+            UristHeightView.ReloadProfilePreview(new HumanoidCharacterProfile());
+            CharHeightView.ReloadProfilePreview(Profile);
+            // DEN End, height view
 
             // Check and set the dirty flag to enable the save/reset buttons as appropriate.
             SetDirty();

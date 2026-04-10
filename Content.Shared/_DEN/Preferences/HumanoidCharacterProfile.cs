@@ -15,6 +15,12 @@ public sealed partial class HumanoidCharacterProfile
     [DataField("_traitPreferences")]
     private HashSet<ProtoId<EntityTraitPrototype>> _entityTraitPreferences = new();
 
+    [DataField]
+    public float Height = 1;
+
+    [DataField]
+    public float Width = 1;
+
     /// <summary>
     /// <see cref="_entityTraitPreferences"/>
     /// </summary>
@@ -27,6 +33,8 @@ public sealed partial class HumanoidCharacterProfile
         int age,
         Sex sex,
         Gender gender,
+        float height,
+        float width,
         HumanoidCharacterAppearance appearance,
         SpawnPriorityPreference spawnPriority,
         Dictionary<ProtoId<JobPrototype>, JobPriority> jobPriorities,
@@ -41,6 +49,8 @@ public sealed partial class HumanoidCharacterProfile
         Age = age;
         Sex = sex;
         Gender = gender;
+        Height = height;
+        Width = width;
         Appearance = appearance;
         SpawnPriority = spawnPriority;
         _jobPriorities = jobPriorities;
@@ -159,4 +169,21 @@ public sealed partial class HumanoidCharacterProfile
         return result;
     }
 
+    [PublicAPI]
+    public HumanoidCharacterProfile WithHeight(float height, IPrototypeManager protoManager)
+    {
+        return new HumanoidCharacterProfile(this)
+        {
+            Height = height,
+        };
+    }
+
+    [PublicAPI]
+    public HumanoidCharacterProfile WithWidth(float width, IPrototypeManager protoManager)
+    {
+        return new HumanoidCharacterProfile(this)
+        {
+            Width = width,
+        };
+    }
 }

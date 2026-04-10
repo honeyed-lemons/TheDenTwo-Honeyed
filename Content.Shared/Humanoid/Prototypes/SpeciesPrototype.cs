@@ -3,6 +3,7 @@ using Content.Shared.Dataset;
 using Content.Shared.Humanoid.Markings;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype;
+using System.Numerics; // DEN
 
 namespace Content.Shared.Humanoid.Prototypes;
 
@@ -105,6 +106,41 @@ public sealed partial class SpeciesPrototype : IPrototype
     /// </summary>
     [DataField]
     public int MaxAge = 120;
+
+    //DEN Start
+
+    /// <summary>
+    ///     Minimum and Maximum height this species can be.
+    /// </summary>
+    [DataField]
+    public (float min, float max) DefaultHeightBounds = new(0.75f,1.5f);
+    /// <summary>
+    ///     Minimum and Maximum width this species can be.
+    /// </summary>
+    [DataField]
+    public (float min, float max) DefaultWidthBounds = new(0.75f,1.5f);
+    /// <summary>
+    ///     The default height of this species.
+    /// </summary>
+    [DataField]
+    public float DefaultHeight = 1;
+    /// <summary>
+    ///     The default width of this species.
+    /// </summary>
+    [DataField]
+    public float DefaultWidth = 1;
+    /// <summary>
+    ///     The maximum difference between height and width permitted.
+    /// </summary>
+    [DataField]
+    public float SizeRatio = 1.25f;
+    /// <summary>
+    ///     The default height of this species in centimeters.
+    /// </summary>
+    [DataField]
+    public float DefaultHeightMetric = 176.1f; // this assumes every pixel of the default urist sprite is about 6.07 centimeters (so a full 32 pixels is 194.24)
+
+    //DEN End
 }
 
 public enum SpeciesNaming : byte

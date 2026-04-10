@@ -13,6 +13,8 @@ using Content.Shared.Roles;
 using Robust.Shared.Map;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
+using Content.Client.Sprite; // DEN
+using System.Numerics; // DEN
 
 namespace Content.Client.Lobby.UI.ProfileEditorControls;
 
@@ -28,6 +30,7 @@ public sealed partial class ProfilePreviewSpriteView
             return;
 
         EntMan.System<SharedVisualBodySystem>().ApplyProfileTo(PreviewDummy, humanoid);
+        EntMan.System<ScaleVisualsSystem>().SetSpriteScale(PreviewDummy,new Vector2(humanoid.Width, humanoid.Height)); // DEN
     }
 
     /// <summary>
@@ -53,6 +56,7 @@ public sealed partial class ProfilePreviewSpriteView
             var dummy = _prototypeManager.Index(humanoid.Species).DollPrototype;
             PreviewDummy = EntMan.SpawnEntity(dummy, MapCoordinates.Nullspace);
             EntMan.System<SharedVisualBodySystem>().ApplyProfileTo(PreviewDummy, humanoid);
+            EntMan.System<ScaleVisualsSystem>().SetSpriteScale(PreviewDummy,new Vector2(humanoid.Width, humanoid.Height)); // DEN
         }
         else
         {

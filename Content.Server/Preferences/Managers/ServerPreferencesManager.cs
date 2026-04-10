@@ -176,6 +176,8 @@ namespace Content.Server.Preferences.Managers
                 profile.Age,
                 sex,
                 gender,
+                profile.Height, // DEN
+                profile.Width, // DEN
                 new HumanoidCharacterAppearance
                 (
                     Color.FromHex(profile.EyeColor),

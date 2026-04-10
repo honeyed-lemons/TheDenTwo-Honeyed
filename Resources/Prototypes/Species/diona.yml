@@ -12,3 +12,5 @@
   naming: TheFirstofLast
   sexes:
   - Unsexed
+  defaultHeightBounds: [0.75, 1.65] # DEN
+  defaultWidthBounds: [0.75, 1.65] # DEN
