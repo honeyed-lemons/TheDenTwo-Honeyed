@@ -34,7 +34,7 @@
       Kidneys: OrganHumanKidneys
   - type: HumanoidProfile
     species: Dwarf
-  - type: ScaleVisuals # DEN Height note: this needs to stay so dwarves spawned mid-round stay short!
+  - type: ScaleVisuals
     scale: 1, 0.8
 
 - type: entity
