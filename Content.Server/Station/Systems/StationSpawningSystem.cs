@@ -148,10 +148,10 @@ public sealed class StationSpawningSystem : SharedStationSpawningSystem
             }
 
             //DEN, Height start
-            if (!profile.Height.Equals(species.DefaultHeight) && !profile.Height.Equals(species.DefaultHeight))
-            {
-                _scaleVisuals.SetSpriteScale(entity.Value, new Vector2(profile.Width, profile.Height));
-            }
+
+            //Scale sprite to height and width
+            _scaleVisuals.SetSpriteScale(entity.Value, new Vector2(profile.Width, profile.Height));
+
             //DEN, Height end
         }
 
