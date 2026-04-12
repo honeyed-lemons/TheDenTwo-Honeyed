@@ -133,7 +133,7 @@ public sealed partial class SpeciesPrototype : IPrototype
     ///     The maximum difference between height and width permitted.
     /// </summary>
     [DataField]
-    public float SizeRatio = 1.25f;
+    public float MaximumScaleDifference = 1.1f;
     /// <summary>
     ///     The default height of this species in centimeters.
     /// </summary>

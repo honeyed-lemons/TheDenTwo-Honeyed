@@ -1,6 +1,7 @@
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Content.Shared._DEN.CCVar;
 using Content.Shared.CCVar;
 using Content.Shared.GameTicking;
 using Content.Shared.Humanoid;
@@ -263,13 +264,28 @@ namespace Content.Shared.Preferences
             }
 
             var name = GetName(species, gender);
+            // DEN Height start
+            var configManager = IoCManager.Resolve<IConfigurationManager>();
 
+            var height = speciesPrototype?.DefaultHeight ?? 1;
+            var width = speciesPrototype?.DefaultWidth ?? 1;
+
+            if (configManager.GetCVar(DenCCVars.RandomizeHeight) && speciesPrototype != null)
+            {
+                var heightBounds = speciesPrototype.DefaultHeightBounds;
+                var widthBounds = speciesPrototype.DefaultWidthBounds;
+                height = (random.NextFloat(heightBounds.min, heightBounds.max) + speciesPrototype.DefaultHeight) / 2;
+                width = (random.NextFloat(widthBounds.min, widthBounds.max) + speciesPrototype.DefaultHeight) / 2;
+            }
+            // DEN Height end
             return new HumanoidCharacterProfile()
             {
                 Name = name,
                 Sex = sex,
                 Age = age,
                 Gender = gender,
+                Height = height, // DEN
+                Width = width, // DEN
                 Species = species,
                 Appearance = HumanoidCharacterAppearance.Random(species, sex),
             };

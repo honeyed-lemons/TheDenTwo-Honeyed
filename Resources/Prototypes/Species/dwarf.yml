@@ -8,4 +8,4 @@
   defaultHeightBounds: [0.5, 0.85] # DEN
   defaultWidthBounds: [0.5, 1.25] # DEN
   defaultHeight: 0.8 # DEN
-  sizeRatio: 1.4 # DEN, so they can be more squat than other species.
+  maximumScaleDifference: 1.4 # DEN, so they can be more squat than other species.

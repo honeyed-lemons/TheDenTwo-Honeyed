@@ -1,4 +1,6 @@
 using System.Numerics;
+using Content.Shared.Humanoid.Prototypes;
+using Content.Shared.Preferences;
 using Robust.Client.UserInterface.Controls;
 
 namespace Content.Client.Lobby.UI;
@@ -38,23 +40,18 @@ public sealed partial class HumanoidProfileEditor
         var heightBounds = species.DefaultHeightBounds;
         var widthBounds = species.DefaultWidthBounds;
 
-        var height = ClampAxis(Profile.Height, heightBounds);
-        var width = ClampAxis(Profile.Width, widthBounds);
+        var height = ClampScale(Profile.Height, heightBounds);
+        var width = ClampScale(Profile.Width, widthBounds);
 
-        var sizeRatio = species.SizeRatio;
-        var ratio = height / width;
+        var constrainedScale = ConstrainedScale(
+            height,
+            width,
+            species,
+            constrainHeight,
+            constrainWidth);
 
-        if (ratio < 1 / sizeRatio || ratio > sizeRatio)
-        {
-            var targetRatio = ratio < 1 / sizeRatio ? 1 / sizeRatio : sizeRatio;
-            if (constrainWidth)
-                width = height / targetRatio;
-            if (constrainHeight)
-                height = width * targetRatio;
-        }
-
-        height = ClampAxis(height, heightBounds);
-        width = ClampAxis(width, widthBounds);
+        height = ClampScale(constrainedScale.height, heightBounds);
+        width = ClampScale(constrainedScale.width, widthBounds);
 
         Profile = Profile.WithHeight(Height.Value,_prototypeManager);
         Profile = Profile.WithWidth(Width.Value,_prototypeManager);
@@ -67,7 +64,31 @@ public sealed partial class HumanoidProfileEditor
         ReloadProfilePreview();
     }
 
-    private static float ClampAxis(float toClamp, (float min, float max) bounds)
+    private static (float height, float width) ConstrainedScale(
+        float height,
+        float width,
+        SpeciesPrototype species,
+        bool constrainHeight,
+        bool constrainWidth)
+    {
+        var ratio = height / width;
+        var maximumDifference = species.MaximumScaleDifference;
+        if (ratio < 1 / maximumDifference || ratio > maximumDifference)
+        {
+            var targetRatio = ratio < 1 / maximumDifference ? 1 / maximumDifference : maximumDifference;
+            if (constrainWidth)
+                width = height / targetRatio;
+            if (constrainHeight)
+                height = width * targetRatio;
+        }
+
+        height = ClampScale(height, species.DefaultHeightBounds);
+        width = ClampScale(width, species.DefaultWidthBounds);
+
+        return (height, width);
+    }
+
+    private static float ClampScale(float toClamp, (float min, float max) bounds)
     {
         return Math.Clamp(toClamp, bounds.min, bounds.max);
     }

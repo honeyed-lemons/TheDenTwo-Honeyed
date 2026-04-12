@@ -116,7 +116,7 @@
                                                 <BoxContainer Orientation="Horizontal" Margin="5">
                                                     <BoxContainer Orientation="Vertical">
                                                         <Label Text = "{Loc 'humanoid-profile-editor-scale-editor-label-height'}" Align="Left" Margin="5 0 5 0"/>
-                                                        <Label Text = "{Loc 'humanoid-profile-editor-scale-editor-label-height'}" Align="Left" Margin="5 5 5 0"/>
+                                                        <Label Text = "{Loc 'humanoid-profile-editor-scale-editor-label-width'}" Align="Left" Margin="5 5 5 0"/>
                                                     </BoxContainer>
                                                     <BoxContainer Orientation="Vertical" HorizontalExpand="True">
                                                         <BoxContainer Orientation="Horizontal" HorizontalExpand="True">
@@ -132,7 +132,7 @@
                                                 <PanelContainer HorizontalExpand="True" StyleClasses="BackgroundPanel">
                                                     <BoxContainer Orientation="Vertical" >
                                                         <Label Name = "ExactScale" Align="Left"/>
-                                                        <RichTextLabel Text="{Loc 'humanoid-profile-editor-scale-editor-note'}" Margin="0 5 0 5"/>
+                                                        <!--<RichTextLabel Text="{Loc 'humanoid-profile-editor-scale-editor-note'}" Margin="0 5 0 5"/>-->
                                                     </BoxContainer>
                                                 </PanelContainer>
                                             </BoxContainer>

@@ -186,4 +186,14 @@ public sealed partial class HumanoidCharacterProfile
             Width = width,
         };
     }
+
+    [PublicAPI]
+    public HumanoidCharacterProfile WithScale(float height, float width, IPrototypeManager protoManager)
+    {
+        return new HumanoidCharacterProfile(this)
+        {
+            Height = height,
+            Width = width,
+        };
+    }
 }
