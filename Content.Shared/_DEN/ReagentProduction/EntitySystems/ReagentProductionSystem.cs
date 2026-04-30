@@ -11,6 +11,7 @@ using Content.Shared.IdentityManagement;
 using Content.Shared.Mobs.Systems;
 using Content.Shared.Popups;
 using Content.Shared.Verbs;
+using JetBrains.Annotations;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
 using Enumerable = System.Linq.Enumerable;
@@ -66,11 +67,9 @@ public sealed class ReagentProductionSystem : EntitySystem
 
                 if (solution == null)
                     continue;
+
                 // do some math to figure out how much we can add
-                var amountToAdd = FixedPoint2.Clamp(
-                    solution.MaxVolume - solution.Volume,
-                    FixedPoint2.Zero,
-                    productionType.UnitsPerProduction);
+                var amountToAdd = FixedPoint2.Min(solution.AvailableVolume, productionType.UnitsPerProduction);
 
                 if (amountToAdd <= 0)
                     continue;
@@ -172,18 +171,32 @@ public sealed class ReagentProductionSystem : EntitySystem
         args.Handled = true;
     }
 
-    public void AddProductionType(EntityUid entity, ReagentProductionTypePrototype prototypeType)
+    /// <summary>
+    /// Raise an event on an entity to add the provided production type,
+    /// adds the <see cref="ReagentProducerComponent"/> if it does not exist.
+    /// </summary>
+    /// <param name="entity">Entity to add the production type to.</param>
+    /// <param name="production">The <see cref="ReagentProductionTypePrototype"/> to add.</param>
+    [PublicAPI]
+    public void AddProductionType(EntityUid entity, ReagentProductionTypePrototype production)
     {
         EnsureComp<ReagentProducerComponent>(entity);
 
-        RaiseLocalEvent(entity, new ReagentProductionTypeAdded(prototypeType));
+        RaiseLocalEvent(entity, new ReagentProductionTypeAdded(production));
     }
 
-    public void RemoveProductionType(EntityUid entity, ReagentProductionTypePrototype prototypeType)
+    /// <summary>
+    /// Raise an event on an entity to remove the provided production type,
+    /// removes the <see cref="ReagentProducerComponent"/> if there is no production type remaining.
+    /// </summary>
+    /// <param name="entity">Entity to remove the production type from.</param>
+    /// <param name="production">The <see cref="ReagentProductionTypePrototype"/> to remove.</param>
+    [PublicAPI]
+    public void RemoveProductionType(EntityUid entity, ReagentProductionTypePrototype production)
     {
         EnsureComp<ReagentProducerComponent>(entity);
 
-        RaiseLocalEvent(entity, new ReagentProductionTypeRemoved(prototypeType));
+        RaiseLocalEvent(entity, new ReagentProductionTypeRemoved(production));
     }
 
     private void ProductionTypeAdded(Entity<ReagentProducerComponent> ent, ref ReagentProductionTypeAdded args)
@@ -196,6 +209,7 @@ public sealed class ReagentProductionSystem : EntitySystem
         _solutionContainer.EnsureSolution(ent.Owner, productionType.SolutionName,out _, out var solution, productionType.MaximumCapacity);
         solution?.AddReagent(productionType.Reagent, productionType.MaximumCapacity);
     }
+
     private void ProductionTypeRemoved(Entity<ReagentProducerComponent> ent, ref ReagentProductionTypeRemoved args)
     {
         ent.Comp.ProductionTypes.Remove(args.ProductionType);
