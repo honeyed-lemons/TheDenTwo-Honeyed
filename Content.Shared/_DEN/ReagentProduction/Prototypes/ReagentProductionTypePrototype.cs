@@ -1,6 +1,7 @@
 using Content.Shared.Chemistry.Reagent;
 using Content.Shared.FixedPoint;
 using Robust.Shared.Prototypes;
+using Robust.Shared.Utility;
 
 namespace Content.Shared._DEN.ReagentProduction.Prototypes;
 
@@ -40,6 +41,12 @@ public sealed partial class ReagentProductionTypePrototype : IPrototype
     /// </summary>
     [DataField]
     public FixedPoint2 UnitsPerProduction = 5;
+
+    /// <summary>
+    /// Determines if the verb icon is NSFW or not.. I'd love to specify an actual texture here but YOU CANT SPECIFY SPECIFIC TEXTURES IN YAML !!!!!!!!!!
+    /// </summary>
+    [DataField]
+    public bool NsfwVerbIcon;
 
     /// <summary>
     /// Popup that occurs when your solution is empty

@@ -5,6 +5,7 @@
   maximumCapacity: 30
   maximumLoad: 10
   unitsPerProduction: 5
+  nsfwVerbIcon: true
   dryPopup: cum-verb-dry
   successPopup: cum-verb-success
 
@@ -16,6 +17,7 @@
   maximumLoad: 5
   doAfterLength: 1
   unitsPerProduction: 5
+  nsfwVerbIcon: true
   dryPopup: milk-verb-dry
   successPopup: milk-verb-success
 
@@ -26,6 +28,7 @@
   maximumCapacity: 10
   maximumLoad: 2
   unitsPerProduction: 4
+  nsfwVerbIcon: true
   dryPopup: squirt-verb-dry
   successPopup: squirt-verb-success
 
@@ -49,6 +52,7 @@
   maximumLoad: 10
   doAfterLength: 3
   unitsPerProduction: 10
+  nsfwVerbIcon: true
   dryPopup: synth-cum-verb-dry
   successPopup: synth-cum-verb-success
 
@@ -60,5 +64,6 @@
   maximumLoad: 30
   doAfterLength: 3
   unitsPerProduction: 2
+  nsfwVerbIcon: true
   dryPopup: synth-lube-verb-dry
   successPopup: synth-lube-verb-success

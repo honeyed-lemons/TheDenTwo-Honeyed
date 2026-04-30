@@ -14,6 +14,7 @@ using Content.Shared.Verbs;
 using JetBrains.Annotations;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
+using Robust.Shared.Utility;
 using Enumerable = System.Linq.Enumerable;
 using static Content.Shared._DEN.ReagentProduction.Events.ReagentProductionEvents;
 
@@ -28,7 +29,7 @@ public sealed class ReagentProductionSystem : EntitySystem
     [Dependency] private readonly SharedPopupSystem _popup = default!;
     [Dependency] private readonly SharedSolutionContainerSystem _solutionContainer = default!;
 
-    public static readonly VerbCategory ReagentFillCategory = new("verb-categories-fill", "/Textures/_DEN/Interface/VerbIcons/lewd.svg.192dpi.png");
+    public static readonly VerbCategory ReagentFillCategory = new("verb-categories-fill", "/Textures/Interface/VerbIcons/spill.svg.192dpi.png");
 
     public override void Initialize()
     {
@@ -96,6 +97,11 @@ public sealed class ReagentProductionSystem : EntitySystem
                 !_protoManager.TryIndex(productionType.Reagent, out var reagent))
                 continue;
 
+            // I'd love if I could specify this via yaml. alas YOU CANT DEFINE SPRITES VIA -
+            var icon = productionType.NsfwVerbIcon
+                ? new SpriteSpecifier.Texture(new ResPath("/Textures/_DEN/Interface/VerbIcons/lewd.svg.192dpi.png"))
+                : null;
+
             var verb = new InteractionVerb
             {
                 Category = ReagentFillCategory,
@@ -103,6 +109,7 @@ public sealed class ReagentProductionSystem : EntitySystem
                 Text = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(reagent.LocalizedName),
                 Priority = -1,
                 CloseMenu = false,
+                Icon = icon,
             };
             args.Verbs.Add(verb);
         }
