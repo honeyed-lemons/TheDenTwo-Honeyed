@@ -14,7 +14,7 @@
   solutionName: breasts
   maximumCapacity: 50
   maximumLoad: 5
-  fillTime: 1
+  doAfterLength: 1
   unitsPerProduction: 5
   dryPopup: milk-verb-dry
   successPopup: milk-verb-success
@@ -47,7 +47,7 @@
   solutionName: syntheticBalls #I guess????????
   maximumCapacity: 50
   maximumLoad: 10
-  fillTime: 3
+  doAfterLength: 3
   unitsPerProduction: 10
   dryPopup: synth-cum-verb-dry
   successPopup: synth-cum-verb-success
@@ -58,7 +58,7 @@
   solutionName: syntheticLubeTube #yupppp
   maximumCapacity: 70
   maximumLoad: 30
-  fillTime: 3
+  doAfterLength: 3
   unitsPerProduction: 2
   dryPopup: synth-lube-verb-dry
   successPopup: synth-lube-verb-success
