@@ -96,32 +96,27 @@ public sealed partial class RecolorSystem
         args.Handled = true;
     }
 
-    private bool CanRecolor(Entity<RecolorApplierComponent> applier, EntityUid user, EntityUid target, bool? verb = false)
+    private bool CanRecolor(Entity<RecolorApplierComponent> applier, EntityUid user, EntityUid target, bool? doPopup = true)
     {
-        // Check if the applier is opened
+        // Popup target is set here.
+        EntityUid? popupTarget = doPopup == true ? user : null;
 
-        // All this code is to make sure not to send a popup if this is done with a verb. sigh
-        EntityUid? closedUser = user;
-
-        if (verb != null && verb.Value)
-            closedUser = null;
-
-        if (_openable.IsClosed(applier, closedUser, predicted: true))
+        if (_openable.IsClosed(applier, popupTarget, predicted: true))
             return false;
 
         // Check whitelist and blacklist
         if (!_whitelist.CheckBoth(target, applier.Comp.EntityBlacklist, applier.Comp.EntityWhitelist))
         {
-            if (verb == null || !verb.Value)
-                _popup.PopupClient(Loc.GetString(applier.Comp.CantRecolorPopup, ("target", target)), applier, user);
+            if (doPopup == true)
+                _popup.PopupClient(Loc.GetString(applier.Comp.CantRecolorPopup, ("target", target)), applier, popupTarget);
             return false;
         }
 
         // Check if there's enough uses left
         if (applier.Comp is { UsesLeft: <= 0, MaxUses: not null })
         {
-            if (verb == null || !verb.Value)
-                _popup.PopupClient(Loc.GetString(applier.Comp.NoMoreUsesPopup, ("name", applier)),applier, user);
+            if (doPopup == true)
+                _popup.PopupClient(Loc.GetString(applier.Comp.NoMoreUsesPopup, ("name", applier)), applier, popupTarget);
             return false;
         }
 
@@ -132,7 +127,7 @@ public sealed partial class RecolorSystem
     {
         if (!args.CanAccess
             || !args.CanInteract
-            || !CanRecolor(ent, args.User, args.Target, true))
+            || !CanRecolor(ent, args.User, args.Target, false))
             return;
 
         var user = args.User;
@@ -140,7 +135,7 @@ public sealed partial class RecolorSystem
 
         var verb = new UtilityVerb
         {
-            Act = () =>  TryStartApplyRecolorDoAfter(user, target, ent),
+            Act = () => TryStartApplyRecolorDoAfter(user, target, ent),
             Text = Loc.GetString(ent.Comp.VerbText),
             Icon = ent.Comp.VerbIcon,
         };
