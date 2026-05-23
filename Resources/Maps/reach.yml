@@ -1,11 +1,11 @@
 meta:
   format: 7
   category: Map
-  engineVersion: 270.1.0
+  engineVersion: 273.0.0
   forkId: ""
   forkVersion: ""
-  time: 01/13/2026 00:18:31
-  entityCount: 2641
+  time: 04/05/2026 09:08:00
+  entityCount: 2642
 maps:
 - 1
 grids:
@@ -1363,6 +1363,8 @@ entities:
     - type: SpreaderGrid
     - type: ImplicitRoof
     - type: ExplosionAirtightGrid
+    - type: TileHistory
+      chunkHistory: {}
 - proto: AirAlarm
   entities:
   - uid: 3
@@ -14714,6 +14716,13 @@ entities:
     components:
     - type: Transform
       pos: 6.5,13.5
+      parent: 2
+- proto: SpawnPointMantis
+  entities:
+  - uid: 2642
+    components:
+    - type: Transform
+      pos: -8.5,0.5
       parent: 2
 - proto: SpawnPointMedicalDoctor
   entities:
