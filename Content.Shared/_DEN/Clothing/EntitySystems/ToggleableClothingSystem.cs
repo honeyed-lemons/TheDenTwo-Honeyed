@@ -5,7 +5,7 @@ namespace Content.Shared.Clothing.EntitySystems;
 
 public sealed partial class ToggleableClothingSystem
 {
-    [Dependency] private readonly RecolorSystem _recolor = default!;
+    [Dependency] private RecolorSystem _recolor = default!;
 
     // DEN, recolor system start
     private void OnToggleableRecolored(Entity<ToggleableClothingComponent> ent, ref OnRecoloredEvent args)

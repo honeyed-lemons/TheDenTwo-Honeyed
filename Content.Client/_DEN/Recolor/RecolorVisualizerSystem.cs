@@ -11,7 +11,7 @@ namespace Content.Client._DEN.Recolor;
 
 public sealed class RecolorVisualizerSystem : VisualizerSystem<RecoloredComponent>
 {
-    [Dependency] private readonly ItemSystem _item = default!;
+    [Dependency] private ItemSystem _item = default!;
 
     public override void Initialize()
     {

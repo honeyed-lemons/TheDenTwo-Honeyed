@@ -16,16 +16,16 @@ namespace Content.Shared._DEN.Recolor;
 
 public sealed partial class RecolorSystem : EntitySystem
 {
-    [Dependency] private readonly ILocalizationManager _localizationManager = default!;
+    [Dependency] private ILocalizationManager _localizationManager = default!;
 
-    [Dependency] private readonly EntityWhitelistSystem _whitelist = default!;
-    [Dependency] private readonly OpenableSystem _openable = default!;
-    [Dependency] private readonly SharedAppearanceSystem _appearance = default!;
-    [Dependency] private readonly SharedAudioSystem _audio = default!;
-    [Dependency] private readonly SharedDoAfterSystem _doAfter = default!;
-    [Dependency] private readonly SharedItemSystem _item = default!;
-    [Dependency] private readonly SharedPopupSystem _popup = default!;
-    [Dependency] private readonly SharedUserInterfaceSystem _ui = default!;
+    [Dependency] private EntityWhitelistSystem _whitelist = default!;
+    [Dependency] private OpenableSystem _openable = default!;
+    [Dependency] private SharedAppearanceSystem _appearance = default!;
+    [Dependency] private SharedAudioSystem _audio = default!;
+    [Dependency] private SharedDoAfterSystem _doAfter = default!;
+    [Dependency] private SharedItemSystem _item = default!;
+    [Dependency] private SharedPopupSystem _popup = default!;
+    [Dependency] private SharedUserInterfaceSystem _ui = default!;
 
     public override void Initialize()
     {
