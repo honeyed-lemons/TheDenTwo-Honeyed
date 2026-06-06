@@ -9,7 +9,7 @@ using Robust.Client.GameObjects;
 
 namespace Content.Client._DEN.Recolor;
 
-public sealed class RecolorVisualizerSystem : VisualizerSystem<RecoloredComponent>
+public sealed partial class RecolorVisualizerSystem : VisualizerSystem<RecoloredComponent>
 {
     [Dependency] private ItemSystem _item = default!;
 
