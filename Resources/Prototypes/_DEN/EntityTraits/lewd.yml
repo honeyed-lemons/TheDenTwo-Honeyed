@@ -7,9 +7,9 @@
   category: Lewd
   cost: 1
   functions:
-  - !type:AddReagentProductionTrait
-    productionTypes:
-    - CumProduction
+  - !type:AddSolutionExpulsionTrait
+    solutionExpellableEntities:
+    - SolutionTesticles
 
 - type: entityTrait
   id: SyntheticCumProducer
@@ -18,9 +18,9 @@
   category: Lewd
   cost: 1
   functions:
-  - !type:AddReagentProductionTrait
-    productionTypes:
-    - SynthCumProduction
+  - !type:AddSolutionExpulsionTrait
+    solutionExpellableEntities:
+    - SolutionSyntheticTesticles
 
 - type: entityTrait
   id: SquirtProducer
@@ -29,9 +29,9 @@
   category: Lewd
   cost: 1
   functions:
-  - !type:AddReagentProductionTrait
-    productionTypes:
-    - SquirtProduction
+  - !type:AddSolutionExpulsionTrait
+    solutionExpellableEntities:
+    - SolutionSquirt
 
 - type: entityTrait
   id: SyntheticLubeProducer
@@ -40,9 +40,9 @@
   category: Lewd
   cost: 1
   functions:
-  - !type:AddReagentProductionTrait
-    productionTypes:
-    - SynthLubeProduction
+  - !type:AddSolutionExpulsionTrait
+    solutionExpellableEntities:
+    - SolutionSyntheticLube
 
 - type: entityTrait
   id: MilkProducer
@@ -51,6 +51,6 @@
   category: Lewd
   cost: 1
   functions:
-  - !type:AddReagentProductionTrait
-    productionTypes:
-    - BreastMilkProduction
+  - !type:AddSolutionExpulsionTrait
+    solutionExpellableEntities:
+    - SolutionBreasts

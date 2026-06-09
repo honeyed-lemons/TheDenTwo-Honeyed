@@ -1,0 +1,108 @@
+- type: entity
+  parent: [Solution]
+  id: SolutionTesticles # Cum
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Solution
+    solution:
+      maxVol: 30
+      reagents:
+      - ReagentId: Cum
+        Quantity: 30
+  - type: SolutionRegeneration
+    generated:
+      reagents:
+      - ReagentId: Cum
+        Quantity: 0.2 # One unit every 5 seconds.
+  - type: SolutionExpellable
+
+- type: entity
+  parent: [Solution]
+  id: SolutionSyntheticTesticles # Synth Cum
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Solution
+    solution:
+      maxVol: 50
+      reagents:
+      - ReagentId: SyntheticCum
+        Quantity: 50
+  - type: SolutionRegeneration
+    generated:
+      reagents:
+      - ReagentId: SyntheticCum
+        Quantity: 0.4 # One unit every 2.5 seconds.
+  - type: SolutionExpellable
+    verbText: synth-cum-verb-text
+    popupEmpty: synth-cum-verb-dry
+    popupSuccess: synth-cum-verb-success
+
+- type: entity
+  parent: [Solution]
+  id: SolutionBreasts # Milk
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Solution
+    solution:
+      maxVol: 50
+      reagents:
+      - ReagentId: Milk
+        Quantity: 50
+  - type: SolutionRegeneration
+    generated:
+      reagents:
+      - ReagentId: Milk
+        Quantity: 0.2 # One unit every 5 seconds.
+  - type: SolutionExpellable
+    defaultSolutionName: breasts
+    maximumExpulsion: 5
+    verbText: milk-verb-text
+    popupEmpty: milk-verb-dry
+    popupSuccess: milk-verb-success
+    doAfterDuration: 1
+
+- type: entity
+  parent: [Solution]
+  id: SolutionSquirt # Technically its from like, the bladder and the skene's glands??? but whatever. it's natural lube
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Solution
+    solution:
+      maxVol: 15
+      reagents:
+      - ReagentId: NaturalLubricant
+        Quantity: 15
+  - type: SolutionRegeneration
+    generated:
+      reagents:
+      - ReagentId: NaturalLubricant
+        Quantity: 0.1 # One unit every 10 seconds.
+  - type: SolutionExpellable
+    defaultSolutionName: vagina #?
+    maximumExpulsion: 5
+    verbText: squirt-verb-text
+    popupEmpty: squirt-verb-dry
+    popupSuccess: squirt-verb-success
+
+- type: entity
+  parent: [Solution]
+  id: SolutionSyntheticLube # Synthetic Lube
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Solution
+    solution:
+      maxVol: 70
+      reagents:
+      - ReagentId: NaturalLubricant
+        Quantity: 70
+  - type: SolutionRegeneration
+    generated:
+      reagents:
+      - ReagentId: NaturalLubricant
+        Quantity: 0.4 # One unit every 2.5 seconds.
+  - type: SolutionExpellable
+    defaultSolutionName: vagina #?
+    maximumExpulsion: 15
+    verbText: synth-lube-verb-text
+    popupEmpty: synth-lube-verb-dry
+    popupSuccess: synth-lube-verb-success
