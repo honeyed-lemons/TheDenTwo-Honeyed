@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Content.Shared._DEN.SolutionExpulsion.Components;
 using Content.Shared._DEN.SolutionExpulsion.Events;
 using Content.Shared.Chemistry.Components;
@@ -7,6 +8,7 @@ using Content.Shared.FixedPoint;
 using Content.Shared.IdentityManagement;
 using Content.Shared.Popups;
 using Content.Shared.Verbs;
+using JetBrains.Annotations;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 
@@ -27,10 +29,29 @@ public sealed partial class SolutionExpulsionSystem : EntitySystem
 
         SubscribeLocalEvent<RefillableSolutionComponent, GetVerbsEvent<InteractionVerb>>(AddVerbs);
 
-        SubscribeLocalEvent<SolutionExpellerComponent, SolutionExpulsionEvents.SolutionExpulsionFillEvent>(FinishFillDoAfter);
+        SubscribeLocalEvent<SolutionExpellerComponent, SolutionExpulsionFillEvent>(FinishFillDoAfter);
 
-        SubscribeLocalEvent<SolutionExpellerComponent, SolutionExpulsionEvents.SolutionExpellableAdded>(SolutionExpellerAdded);
-        SubscribeLocalEvent<SolutionExpellerComponent, SolutionExpulsionEvents.SolutionExpellableRemoved>(SolutionExpulsionRemoved);
+        SubscribeLocalEvent<SolutionExpellerComponent, SolutionExpellableAdded>(SolutionExpellerAdded);
+        SubscribeLocalEvent<SolutionExpellerComponent, SolutionExpellableRemoved>(SolutionExpulsionRemoved);
+    }
+
+    /// <summary>
+    /// Returns a dictionary containing the EntityUids of all the
+    /// solutions the given entity can expel.
+    /// </summary>
+    /// <param name="entity">Entity to get the expellable solutions from.</param>
+    /// <param name="solutions">A dictionary of all the solutions the given entity can expel.</param>
+    /// <returns></returns>
+    [PublicAPI]
+    public bool GetExpellableSolutions(EntityUid entity, [NotNullWhen(true)] out Dictionary<EntProtoId,EntityUid>? solutions)
+    {
+        solutions = null;
+
+        if (!TryComp<SolutionExpellerComponent>(entity, out var solutionExpeller))
+            return false;
+
+        solutions = solutionExpeller.SolutionEntities;
+        return true;
     }
 
     /// <summary>
@@ -38,11 +59,12 @@ public sealed partial class SolutionExpulsionSystem : EntitySystem
     /// </summary>
     /// <param name="entity">The entity to add the expellable solution to.</param>
     /// <param name="expellableSolutionPrototype">The entity prototype of the solution you want the entity to expel.</param>
+    [PublicAPI]
     public void AddExpellableSolution(EntityUid entity, EntProtoId expellableSolutionPrototype)
     {
         EnsureComp<SolutionExpellerComponent>(entity);
 
-        RaiseLocalEvent(entity, new SolutionExpulsionEvents.SolutionExpellableAdded(expellableSolutionPrototype));
+        RaiseLocalEvent(entity, new SolutionExpellableAdded(expellableSolutionPrototype));
     }
 
     /// <summary>
@@ -51,14 +73,17 @@ public sealed partial class SolutionExpulsionSystem : EntitySystem
     /// </summary>
     /// <param name="entity">The entity to remove the expellable solution from.</param>
     /// <param name="expellableSolutionPrototype">The entity prototype of the solution you don't want the entity to expel.</param>
+    [PublicAPI]
     public void RemoveExpellableSolution(EntityUid entity, EntProtoId expellableSolutionPrototype)
     {
-        EnsureComp<SolutionExpellerComponent>(entity);
+        // If you don't have the comp we have nothing to remove xoxoxo
+        if (!HasComp<SolutionExpellerComponent>(entity))
+            return;
 
-        RaiseLocalEvent(entity, new SolutionExpulsionEvents.SolutionExpellableRemoved(expellableSolutionPrototype));
+        RaiseLocalEvent(entity, new SolutionExpellableRemoved(expellableSolutionPrototype));
     }
 
-    private void SolutionExpellerAdded(Entity<SolutionExpellerComponent> ent, ref SolutionExpulsionEvents.SolutionExpellableAdded args)
+    private void SolutionExpellerAdded(Entity<SolutionExpellerComponent> ent, ref SolutionExpellableAdded args)
     {
         if (!_protoMan.TryIndex(args.ExpellableSolutionPrototype, out _))
             return;
@@ -73,7 +98,7 @@ public sealed partial class SolutionExpulsionSystem : EntitySystem
         Dirty(ent);
     }
 
-    private void SolutionExpulsionRemoved(Entity<SolutionExpellerComponent> ent, ref SolutionExpulsionEvents.SolutionExpellableRemoved args)
+    private void SolutionExpulsionRemoved(Entity<SolutionExpellerComponent> ent, ref SolutionExpellableRemoved args)
     {
         if (!_protoMan.TryIndex(args.ExpellableSolutionPrototype, out _))
             return;
@@ -132,7 +157,7 @@ public sealed partial class SolutionExpulsionSystem : EntitySystem
             new DoAfterArgs(EntityManager,
                 user,
                 solution.Comp.DoAfterDuration,
-                new SolutionExpulsionEvents.SolutionExpulsionFillEvent(GetNetEntity(solution)),
+                new SolutionExpulsionFillEvent(GetNetEntity(solution)),
                 user,
                 target: target)
             {
@@ -141,7 +166,7 @@ public sealed partial class SolutionExpulsionSystem : EntitySystem
             });
     }
 
-    private void FinishFillDoAfter(Entity<SolutionExpellerComponent> ent, ref SolutionExpulsionEvents.SolutionExpulsionFillEvent args)
+    private void FinishFillDoAfter(Entity<SolutionExpellerComponent> ent, ref SolutionExpulsionFillEvent args)
     {
         if (args.Target == null || args.Cancelled || args.Handled)
             return;
@@ -162,7 +187,7 @@ public sealed partial class SolutionExpulsionSystem : EntitySystem
             return;
 
 
-        // If there's no cum to cum you cant cum, okay?
+        // If there's no fluid to expel you cant expel, okay?
         if (expellableSolution.Volume <= 0)
         {
             _popup.PopupPredicted(Loc.GetString(expellableComponent.PopupEmpty),args.Args.User,args.Args.User);

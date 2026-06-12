@@ -23,6 +23,10 @@ public sealed partial class AddSolutionExpulsionTrait : ITraitFunction
             if (!prototypeManager.TryIndex(solutionToExpel, out var prototype))
                 continue;
 
+            if (solutionExpulsion.GetExpellableSolutions(owner, out var solutions)
+                && solutions.ContainsKey(solutionToExpel))
+                return;
+
             solutionExpulsion.AddExpellableSolution(owner, prototype);
         }
     }
