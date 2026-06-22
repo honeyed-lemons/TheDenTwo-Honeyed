@@ -7,13 +7,12 @@ public sealed partial class ToggleableClothingSystem
 {
     [Dependency] private RecolorSystem _recolor = default!;
 
-    // DEN, recolor system start
     private void OnToggleableRecolored(Entity<ToggleableClothingComponent> ent, ref OnRecoloredEvent args)
     {
         var toggled = ent.Comp.ClothingUid;
 
         if (toggled != null)
-            _recolor.Recolor(toggled.Value,args.RecolorData, args.Recolorer);
+            _recolor.Recolor(toggled.Value, args.RecolorData, args.Recolorer);
     }
 
     private void OnToggleableRecolorRemoved(Entity<ToggleableClothingComponent> ent, ref OnRecolorRemovedEvent args)

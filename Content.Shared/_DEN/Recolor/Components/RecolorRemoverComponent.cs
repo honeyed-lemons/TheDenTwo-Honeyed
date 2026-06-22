@@ -3,6 +3,7 @@ using Robust.Shared.Audio;
 using Robust.Shared.GameStates;
 
 namespace Content.Shared._DEN.Recolor.Components;
+
 /// <summary>
 /// Component used to designate that an item can remove RecolorComponent from applicable recolored items.
 /// </summary>

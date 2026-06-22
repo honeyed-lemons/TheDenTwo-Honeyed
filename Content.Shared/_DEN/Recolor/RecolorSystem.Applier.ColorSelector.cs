@@ -20,7 +20,7 @@ public sealed partial class RecolorSystem
         if (!TryComp<RecolorApplierComponent>(ent, out var recolorApplier))
             return;
 
-        ChangeColor((ent.Owner,recolorApplier),args.Color);
+        ChangeColor((ent.Owner, recolorApplier), args.Color);
     }
 
     [Serializable, NetSerializable]

@@ -4,6 +4,7 @@ using Robust.Shared.GameStates;
 using Robust.Shared.Utility;
 
 namespace Content.Shared._DEN.Recolor.Components;
+
 /// <summary>
 /// Component used to designate something can apply recolors, EG spray paint.
 /// </summary>

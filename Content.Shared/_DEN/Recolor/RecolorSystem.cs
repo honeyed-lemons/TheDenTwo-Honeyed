@@ -124,7 +124,7 @@ public sealed partial class RecolorSystem : EntitySystem
         var ev = new OnRecolorRemovedEvent(ent);
         RaiseLocalEvent(ent, ev);
 
-        RemoveVisuals((ent,ent.Comp));
+        RemoveVisuals((ent, ent.Comp));
 
         RemComp(ent, ent.Comp);
     }

@@ -13,7 +13,7 @@ public sealed partial class RecolorSystem
         if (args.Target == null
             || args.Handled
             || !args.CanReach
-            || _whitelist.CheckBoth(args.Target,ent.Comp.EntityBlacklist,ent.Comp.EntityWhitelist))
+            || _whitelist.CheckBoth(args.Target, ent.Comp.EntityBlacklist, ent.Comp.EntityWhitelist))
             return;
         if (!TryComp<RecoloredComponent>(args.Target, out var recolored) || !recolored.RecolorData.Removable)
             return;
@@ -44,7 +44,7 @@ public sealed partial class RecolorSystem
         var recolorData = target.Comp.RecolorData;
 
         if (recolorData.PaintType != null)
-            _popup.PopupClient(Loc.GetString("recolor-remover-start-popup", ("name", target), ("paintType", recolorData.PaintType)),remover,user);
+            _popup.PopupClient(Loc.GetString("recolor-remover-start-popup", ("name", target), ("paintType", recolorData.PaintType)), remover, user);
 
         return _doAfter.TryStartDoAfter(doAfterArgs);
     }
@@ -54,7 +54,7 @@ public sealed partial class RecolorSystem
         if (args.Handled
             || args.Cancelled
             || !TryComp<RecoloredComponent>(args.Target, out var recolored)
-            || _whitelist.CheckBoth(args.Target,ent.Comp.EntityBlacklist,ent.Comp.EntityWhitelist))
+            || _whitelist.CheckBoth(args.Target, ent.Comp.EntityBlacklist, ent.Comp.EntityWhitelist))
             return;
 
         var recolorData = recolored.RecolorData;
@@ -82,7 +82,7 @@ public sealed partial class RecolorSystem
 
         var verb = new UtilityVerb
         {
-            Act = () =>  TryStartRemoveRecolorDoAfter(user, (target, recolored), ent),
+            Act = () => TryStartRemoveRecolorDoAfter(user, (target, recolored), ent),
             Text = Loc.GetString("verb-remove-recolor"),
             Icon = new SpriteSpecifier.Texture(new ResPath("/Textures/Interface/VerbIcons/bubbles.svg.192dpi.png")),
         };

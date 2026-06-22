@@ -42,26 +42,26 @@ public sealed partial class RecolorVisualizerSystem : VisualizerSystem<Recolored
         if (!TryComp(ent, out SpriteComponent? sprite))
             return;
 
-        RemoveRecolor(ent,sprite);
+        RemoveRecolor(ent, sprite);
         _item.VisualsChanged(ent);
     }
 
     private void ApplyRecolorInHands(Entity<RecoloredComponent> ent, ref GetInhandVisualsEvent args)
     {
-        ApplyRecolorLayers(ent,args.Layers);
+        ApplyRecolorLayers(ent, args.Layers);
     }
 
     private void ApplyRecolorEquipment(Entity<RecoloredComponent> ent, ref GetEquipmentVisualsEvent args)
     {
-        ApplyRecolorLayers(ent,args.Layers);
+        ApplyRecolorLayers(ent, args.Layers);
     }
 
     private void ApplyRecolorLayers(Entity<RecoloredComponent> ent, List<(string, PrototypeLayerData)> layers)
     {
-        if(!TryComp<AppearanceComponent>(ent, out var appearance))
+        if (!TryComp<AppearanceComponent>(ent, out var appearance))
             return;
 
-        if (!AppearanceSystem.TryGetData(ent, RecolorVisuals.RecolorData, out RecolorData recolorData,appearance))
+        if (!AppearanceSystem.TryGetData(ent, RecolorVisuals.RecolorData, out RecolorData recolorData, appearance))
             return;
 
         foreach (var (_, layerData) in layers)
@@ -80,7 +80,7 @@ public sealed partial class RecolorVisualizerSystem : VisualizerSystem<Recolored
 
     private void ApplyRecolorSprite(Entity<RecoloredComponent> ent, SpriteComponent sprite)
     {
-        if(!TryComp<AppearanceComponent>(ent, out var appearance))
+        if (!TryComp<AppearanceComponent>(ent, out var appearance))
             return;
 
         if (!AppearanceSystem.TryGetData(ent, RecolorVisuals.RecolorData, out RecolorData recolorData, appearance))
@@ -107,7 +107,7 @@ public sealed partial class RecolorVisualizerSystem : VisualizerSystem<Recolored
 
     private void RemoveRecolor(Entity<RecoloredComponent> ent, SpriteComponent sprite)
     {
-        if(!TryComp<AppearanceComponent>(ent, out var appearance))
+        if (!TryComp<AppearanceComponent>(ent, out var appearance))
             return;
 
         if (!AppearanceSystem.TryGetData(ent, RecolorVisuals.RecolorData, out RecolorData recolorData, appearance))
