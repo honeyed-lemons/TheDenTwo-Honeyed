@@ -1,5 +1,10 @@
 # Species
 - type: traitCategory
+  id: Perks
+  name: trait-category-perks
+  priority: -8
+
+- type: traitCategory
   id: SpeciesMorphs
   name: trait-category-species-morphs
   priority: -20

@@ -16,7 +16,6 @@ using Content.Shared.FixedPoint;
 using Content.Shared.Mobs.Systems;
 using Content.Shared.Random.Helpers;
 using Robust.Shared.Prototypes;
-using Robust.Shared.Random;
 using Robust.Shared.Timing;
 
 namespace Content.Shared.Metabolism;
@@ -25,7 +24,6 @@ namespace Content.Shared.Metabolism;
 public sealed partial class MetabolizerSystem : EntitySystem
 {
     [Dependency] private IGameTiming _gameTiming = default!;
-    [Dependency] private IPrototypeManager _prototypeManager = default!;
     [Dependency] private MobStateSystem _mobStateSystem = default!;
     [Dependency] private SharedEntityConditionsSystem _entityConditions = default!;
     [Dependency] private SharedEntityEffectsSystem _entityEffects = default!;
@@ -40,6 +38,8 @@ public sealed partial class MetabolizerSystem : EntitySystem
 
         SubscribeLocalEvent<MetabolizerComponent, MapInitEvent>(OnMapInit);
         SubscribeLocalEvent<MetabolizerComponent, BodyRelayedEvent<ApplyMetabolicMultiplierEvent>>(OnApplyMetabolicMultiplier);
+
+        InitializeDen(); // DEN - metabolizer extension
     }
 
     private void OnMapInit(Entity<MetabolizerComponent> ent, ref MapInitEvent args)
@@ -153,7 +153,7 @@ public sealed partial class MetabolizerSystem : EntitySystem
         int reagents = 0;
         foreach (var (reagent, quantity) in list)
         {
-            if (!_prototypeManager.TryIndex<ReagentPrototype>(reagent.Prototype, out var proto))
+            if (!ProtoMan.TryIndex<ReagentPrototype>(reagent.Prototype, out var proto))
                 continue;
 
             // Skip blood reagents

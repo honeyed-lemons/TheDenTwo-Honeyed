@@ -142,6 +142,8 @@
     - ServiceStatic
     - PowerCellsStatic
     - ElectronicsStatic
+    - TentsStatic   #DEN
+    - DenHoloprojectorsStatic # DEN Shared static recipes.
   - type: EmagLatheRecipes
     emagStaticPacks:
     - SecurityAmmoStatic
@@ -491,6 +493,7 @@
   - type: OreSiloClient
   - type: LatheAnnouncing
     channels: [Medical]
+  - type: AmbientMusicMarkerMedical
 
 - type: entity
   parent: BaseLathe
@@ -527,6 +530,7 @@
     - Scarves
     - Carpets
     - Bedsheets
+    - TentsStatic   #DEN
   - type: EmagLatheRecipes
     emagStaticPacks:
     - ClothingCentComm
@@ -701,6 +705,7 @@
     - PlasticTilesStatic
     - CarpetTilesStatic
     - PreciousTilesStatic
+    - DenFloorPoolTilesStatic # DEN
     dynamicPacks:
     - FauxTiles
   - type: MaterialStorage

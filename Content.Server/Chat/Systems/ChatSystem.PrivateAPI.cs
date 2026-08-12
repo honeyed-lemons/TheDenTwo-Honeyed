@@ -12,6 +12,8 @@ namespace Content.Server.Chat.Systems;
 
 public sealed partial class ChatSystem
 {
+
+    [Obsolete("Use SendEntityComplexSpeech instead.", true)] // DEN: Languages
     private void SendEntitySpeak(
         EntityUid source,
         string originalMessage,
@@ -21,6 +23,7 @@ public sealed partial class ChatSystem
         bool ignoreActionBlocker = false
         )
     {
+        /* DEN: Kill all of this and use languages instead.
         if (!_actionBlocker.CanSpeak(source) && !ignoreActionBlocker)
             return;
 
@@ -43,7 +46,7 @@ public sealed partial class ChatSystem
             RaiseLocalEvent(source, nameEv);
             name = nameEv.VoiceName;
             // Check for a speech verb override
-            if (nameEv.SpeechVerb != null && _prototypeManager.Resolve(nameEv.SpeechVerb, out var proto))
+            if (nameEv.SpeechVerb != null && ProtoMan.Resolve(nameEv.SpeechVerb, out var proto))
                 speech = proto;
         }
 
@@ -54,12 +57,12 @@ public sealed partial class ChatSystem
             ("verb", Loc.GetString(_random.Pick(speech.SpeechVerbStrings))),
             ("fontType", speech.FontId),
             ("fontSize", speech.FontSize),
-            ("message", FormattedMessage.EscapeText(message)));
+            ("message", message)); // DEN - Remove markdown restrictions
 
         SendInVoiceRange(ChatChannel.Local, message, wrappedMessage, source, range);
 
-        var ev = new EntitySpokeEvent(source, message, null, null);
-        RaiseLocalEvent(source, ev, true);
+        //var ev = new EntitySpokeEvent(source, message, null, null); // DEN: Languages, this has changed, this function isn't used anymore anyway.
+        //RaiseLocalEvent(source, ev, true); // DEN: Languages, this has changed, this function isn't used anymore anyway.
 
         // To avoid logging any messages sent by entities that are not players, like vendors, cloning, etc.
         // Also doesn't log if hideLog is true.
@@ -82,8 +85,10 @@ public sealed partial class ChatSystem
                 _adminLogger.Add(LogType.Chat, LogImpact.Low,
                     $"Say from {source}, original: {originalMessage}, transformed: {message}.");
         }
+        */
     }
 
+    [Obsolete("Use SendEntityComplexSpeech instead.", true)] // DEN: Languages
     private void SendEntityWhisper(
         EntityUid source,
         string originalMessage,
@@ -94,10 +99,11 @@ public sealed partial class ChatSystem
         bool ignoreActionBlocker = false
         )
     {
+        /* DEN: Kill all of this and use languages instead.
         if (!_actionBlocker.CanSpeak(source) && !ignoreActionBlocker)
             return;
 
-        var message = TransformSpeech(source, FormattedMessage.RemoveMarkupOrThrow(originalMessage));
+        var message = TransformSpeech(source, originalMessage); // DEN - Remove markdown restrictions
         if (message.Length == 0)
             return;
 
@@ -120,13 +126,15 @@ public sealed partial class ChatSystem
         name = FormattedMessage.EscapeText(name);
 
         var wrappedMessage = Loc.GetString("chat-manager-entity-whisper-wrap-message",
-            ("entityName", name), ("message", FormattedMessage.EscapeText(message)));
+            ("entityName", name),
+            ("message", message)); // DEN - Remove markdown restrictions
 
         var wrappedobfuscatedMessage = Loc.GetString("chat-manager-entity-whisper-wrap-message",
-            ("entityName", nameIdentity), ("message", FormattedMessage.EscapeText(obfuscatedMessage)));
+            ("entityName", nameIdentity),
+            ("message", obfuscatedMessage)); // DEN - Remove markdown restrictions
 
         var wrappedUnknownMessage = Loc.GetString("chat-manager-entity-whisper-unknown-wrap-message",
-            ("message", FormattedMessage.EscapeText(obfuscatedMessage)));
+            ("message", obfuscatedMessage)); // DEN - Remove markdown restrictions
 
 
         foreach (var (session, data) in GetRecipients(source, WhisperMuffledRange))
@@ -152,8 +160,8 @@ public sealed partial class ChatSystem
 
         _replay.RecordServerMessage(new ChatMessage(ChatChannel.Whisper, message, wrappedMessage, GetNetEntity(source), null, MessageRangeHideChatForReplay(range)));
 
-        var ev = new EntitySpokeEvent(source, message, channel, obfuscatedMessage);
-        RaiseLocalEvent(source, ev, true);
+        // var ev = new EntitySpokeEvent(source, message, channel, obfuscatedMessage); // DEN: Languages, this has changed, this function isn't used anymore anyway.
+        // RaiseLocalEvent(source, ev, true); // DEN: Languages, this has changed, this function isn't used anymore anyway.
         if (!hideLog)
             if (originalMessage == message)
             {
@@ -171,6 +179,7 @@ public sealed partial class ChatSystem
                     _adminLogger.Add(LogType.Chat, LogImpact.Low,
                     $"Whisper from {source}, original: {originalMessage}, transformed: {message}.");
             }
+        */
     }
 
     protected override void SendEntityEmote(
@@ -195,7 +204,7 @@ public sealed partial class ChatSystem
         var wrappedMessage = Loc.GetString("chat-manager-entity-me-wrap-message",
             ("entityName", name),
             ("entity", ent),
-            ("message", FormattedMessage.RemoveMarkupOrThrow(action)));
+            ("message", action)); // DEN - Remove markdown restrictions
 
         if (checkEmote &&
             !TryEmoteChatInput(source, action))
@@ -234,6 +243,9 @@ public sealed partial class ChatSystem
 
     private void SendDeadChat(EntityUid source, ICommonSession player, string message, bool hideChat)
     {
+        if (!_adminManager.IsAdmin(player) && !_deadChatEnabled)
+            return;
+
         var clients = GetDeadChatClients();
         var playerName = Name(source);
         string wrappedMessage;
