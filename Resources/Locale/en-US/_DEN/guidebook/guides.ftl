@@ -1,2 +1,2 @@
 # Chemical Tabs
-guide-entry-lewd = Lewd
+guide-entry-lewd = ⑱ Lewd
